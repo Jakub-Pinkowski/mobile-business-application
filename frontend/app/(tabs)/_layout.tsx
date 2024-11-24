@@ -14,46 +14,71 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        // Set active tab icon and text color using the main theme color
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+            position: 'absolute', // Transparent background for iOS to show the blur effect
           },
-          default: {},
+          default: {
+            backgroundColor: Colors.light.background, // Set the background color for all tabs (white for light mode)
+          },
         }),
       }}
     >
-      {/* TODO: Update icons */}
+      {/* Home Tab */}
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="house.fill" color={color} />
+          ),
+          tabBarStyle: {
+            backgroundColor: Colors.light.background, // Keep background white for Home tab
+          },
         }}
       />
+      {/* Products Tab */}
       <Tabs.Screen
         name="products"
         options={{
           title: 'Products',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="paperplane.fill" color={color} />
+          ),
+          tabBarStyle: {
+            backgroundColor: Colors.light.background, // Keep background white for Products tab
+          },
         }}
       />
+      {/* News Tab */}
       <Tabs.Screen
         name="news"
         options={{
           title: 'News',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="paperplane.fill" color={color} />
+          ),
+          tabBarStyle: {
+            backgroundColor: Colors.light.background, // Keep background white for News tab
+          },
         }}
       />
+      {/* Customers Tab */}
       <Tabs.Screen
         name="customers"
         options={{
           title: 'Customers',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="paperplane.fill" color={color} />
+          ),
+          tabBarStyle: {
+            backgroundColor: Colors.light.background, // Keep background white for Customers tab
+          },
         }}
       />
     </Tabs>
