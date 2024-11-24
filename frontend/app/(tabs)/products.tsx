@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Button, Alert } from 'react-native';
+import { Colors } from '@/constants/Colors';
 
 interface Product {
   id: string;
@@ -91,9 +92,7 @@ export default function ProductsScreen() {
     setIsModalVisible(true);
   };
 
-  // FIXME: Nothing happens after clicking the button, no alert shows up
   const handleDeleteProduct = (productId: string) => {
-    console.log("Deleting product with ID:", productId); // Debugging log
     Alert.alert('Delete Product', 'Are you sure you want to delete this product?', [
       {
         text: 'Cancel',
@@ -101,7 +100,6 @@ export default function ProductsScreen() {
       {
         text: 'Delete',
         onPress: () => {
-          console.log("Product deleted"); // Debugging log
           setProducts(prevProducts => prevProducts.filter(product => product.id !== productId));
         },
         style: 'destructive',
@@ -137,7 +135,6 @@ export default function ProductsScreen() {
     <View style={styles.container}>
       <Text style={styles.header}>Products</Text>
 
-      {/* Add Product Button */}
       <TouchableOpacity style={styles.addButton} onPress={() => setIsAddModalVisible(true)}>
         <Text style={styles.addButtonText}>Add New Product</Text>
       </TouchableOpacity>
@@ -156,9 +153,7 @@ export default function ProductsScreen() {
               <Text style={styles.cardValue}>{product.description}</Text>
 
               <View style={styles.cardActions}>
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => handleEditProduct(product)}>
+                <TouchableOpacity style={styles.button} onPress={() => handleEditProduct(product)}>
                   <Text style={styles.buttonText}>Edit</Text>
                 </TouchableOpacity>
 
@@ -208,7 +203,7 @@ export default function ProductsScreen() {
               <Button title="Update Product" onPress={handleUpdateProduct} />
               <Button
                 title="Cancel"
-                color="red"
+                color={Colors.light.danger}
                 onPress={() => setIsModalVisible(false)}
               />
             </View>
@@ -251,7 +246,7 @@ export default function ProductsScreen() {
               <Button title="Add Product" onPress={handleAddProduct} />
               <Button
                 title="Cancel"
-                color="red"
+                color={Colors.light.danger}
                 onPress={() => setIsAddModalVisible(false)}
               />
             </View>
@@ -265,7 +260,7 @@ export default function ProductsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.light.background,
     paddingHorizontal: 16,
     paddingTop: 16,
   },
@@ -273,22 +268,22 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: '#333',
+    color: Colors.light.text,
   },
   addButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: Colors.light.primary,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 4,
     marginBottom: 16,
   },
   addButtonText: {
-    color: '#fff',
+    color: Colors.light.background,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.light.background,
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,
@@ -306,16 +301,16 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: Colors.light.text,
   },
   cardCategory: {
     fontSize: 14,
-    color: '#555',
+    color: Colors.light.text,
   },
   cardPrice: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#4CAF50',
+    color: Colors.light.primary,
   },
   cardContent: {
     marginTop: 8,
@@ -323,11 +318,11 @@ const styles = StyleSheet.create({
   cardLabel: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#555',
+    color: Colors.light.text,
   },
   cardValue: {
     fontSize: 14,
-    color: '#777',
+    color: Colors.light.text,
     marginBottom: 4,
   },
   cardActions: {
@@ -336,20 +331,20 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   button: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: Colors.light.primary,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 4,
   },
   buttonText: {
-    color: '#fff',
+    color: Colors.light.background,
     fontWeight: 'bold',
   },
   deleteButton: {
-    backgroundColor: '#f44336',
+    backgroundColor: Colors.light.danger,
   },
   deleteButtonText: {
-    color: '#fff',
+    color: Colors.light.background,
   },
   modalOverlay: {
     flex: 1,
@@ -358,7 +353,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.light.background,
     padding: 20,
     borderRadius: 8,
     width: '80%',
@@ -368,11 +363,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: '#333',
+    color: Colors.light.text,
   },
   input: {
     height: 40,
-    borderColor: '#ccc',
+    borderColor: Colors.light.tertiary,
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 12,
