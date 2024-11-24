@@ -24,7 +24,7 @@ export default function TabLayout() {
             position: 'absolute',
           },
           default: {
-            backgroundColor: Colors.light.background, 
+            backgroundColor: Colors.light.background,
           },
         }),
       }}
@@ -51,7 +51,7 @@ export default function TabLayout() {
             <IconSymbol size={28} name="paperplane.fill" color={color} />
           ),
           tabBarStyle: {
-            backgroundColor: Colors.light.background, 
+            backgroundColor: Colors.light.background,
           },
         }}
       />
@@ -61,10 +61,10 @@ export default function TabLayout() {
         options={{
           title: 'News',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <IconSymbol size={28} name="notification" color={color} />
           ),
           tabBarStyle: {
-            backgroundColor: Colors.light.background, 
+            backgroundColor: Colors.light.background,
           },
         }}
       />
@@ -77,7 +77,7 @@ export default function TabLayout() {
             <IconSymbol size={28} name="paperplane.fill" color={color} />
           ),
           tabBarStyle: {
-            backgroundColor: Colors.light.background, 
+            backgroundColor: Colors.light.background,
           },
         }}
       />
