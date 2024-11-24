@@ -68,7 +68,7 @@ export default function TabLayout() {
           },
         }}
       />
-      {/* News Tab */}
+      {/* Customers Tab */}
       <Tabs.Screen
         name="customers"
         options={{
