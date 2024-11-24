@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Button, Alert } from 'react-native';
 
 interface Product {
   id: string;
@@ -70,20 +70,78 @@ const productsData: Product[] = [
 
 export default function ProductsScreen() {
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [products, setProducts] = useState(productsData);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editProduct, setEditProduct] = useState<Product | null>(null);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false); // State for new product modal
+  const [newProduct, setNewProduct] = useState<Product>({
+    id: '',
+    name: '',
+    category: '',
+    price: '',
+    description: '',
+  });
 
   const handlePress = (productId: string) => {
-    setExpanded(prev => (prev === productId ? null : productId)); 
+    setExpanded(prev => (prev === productId ? null : productId));
+  };
+
+  const handleEditProduct = (product: Product) => {
+    setEditProduct(product);
+    setIsModalVisible(true);
+  };
+
+  const handleDeleteProduct = (productId: string) => {
+    Alert.alert('Delete Product', 'Are you sure you want to delete this product?', [
+      {
+        text: 'Cancel',
+      },
+      {
+        text: 'Delete',
+        onPress: () => {
+          setProducts(prevProducts => prevProducts.filter(product => product.id !== productId));
+        },
+        style: 'destructive',
+      },
+    ]);
+  };
+
+  const handleUpdateProduct = () => {
+    if (editProduct) {
+      const updatedProducts = products.map(product =>
+        product.id === editProduct.id ? editProduct : product
+      );
+      setProducts(updatedProducts);
+      setIsModalVisible(false);
+      setEditProduct(null);
+    }
+  };
+
+  const handleAddProduct = () => {
+    const newProductWithId = { ...newProduct, id: `${products.length + 1}` }; // Generate new ID
+    setProducts(prevProducts => [...prevProducts, newProductWithId]);
+    setIsAddModalVisible(false);
+    setNewProduct({
+      id: '',
+      name: '',
+      category: '',
+      price: '',
+      description: '',
+    });
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Products</Text>
 
-      {productsData.map((product) => (
+      {/* Add Product Button */}
+      <TouchableOpacity style={styles.addButton} onPress={() => setIsAddModalVisible(true)}>
+        <Text style={styles.addButtonText}>Add New Product</Text>
+      </TouchableOpacity>
+
+      {products.map((product) => (
         <View key={product.id} style={styles.card}>
-          <TouchableOpacity
-            onPress={() => handlePress(product.id)}
-            style={styles.cardHeader}>
+          <TouchableOpacity onPress={() => handlePress(product.id)} style={styles.cardHeader}>
             <Text style={styles.cardTitle}>{product.name}</Text>
             <Text style={styles.cardCategory}>{product.category}</Text>
             <Text style={styles.cardPrice}>{product.price}</Text>
@@ -93,10 +151,110 @@ export default function ProductsScreen() {
             <View style={styles.cardContent}>
               <Text style={styles.cardLabel}>Description:</Text>
               <Text style={styles.cardValue}>{product.description}</Text>
+
+              <View style={styles.cardActions}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => handleEditProduct(product)}>
+                  <Text style={styles.buttonText}>Edit</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.button, styles.deleteButton]}
+                  onPress={() => handleDeleteProduct(product.id)}>
+                  <Text style={[styles.buttonText, styles.deleteButtonText]}>Delete</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
         </View>
       ))}
+
+      {/* Modal for editing a product */}
+      <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Edit Product</Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Product Name"
+              value={editProduct?.name || ''}
+              onChangeText={text => setEditProduct(prev => ({ ...prev!, name: text }))}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Category"
+              value={editProduct?.category || ''}
+              onChangeText={text => setEditProduct(prev => ({ ...prev!, category: text }))}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Price"
+              value={editProduct?.price || ''}
+              onChangeText={text => setEditProduct(prev => ({ ...prev!, price: text }))}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Description"
+              value={editProduct?.description || ''}
+              onChangeText={text => setEditProduct(prev => ({ ...prev!, description: text }))}
+            />
+
+            <View style={styles.modalActions}>
+              <Button title="Update Product" onPress={handleUpdateProduct} />
+              <Button
+                title="Cancel"
+                color="red"
+                onPress={() => setIsModalVisible(false)}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal for adding a new product */}
+      <Modal visible={isAddModalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Add New Product</Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Product Name"
+              value={newProduct.name}
+              onChangeText={text => setNewProduct(prev => ({ ...prev, name: text }))}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Category"
+              value={newProduct.category}
+              onChangeText={text => setNewProduct(prev => ({ ...prev, category: text }))}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Price"
+              value={newProduct.price}
+              onChangeText={text => setNewProduct(prev => ({ ...prev, price: text }))}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Description"
+              value={newProduct.description}
+              onChangeText={text => setNewProduct(prev => ({ ...prev, description: text }))}
+            />
+
+            <View style={styles.modalActions}>
+              <Button title="Add Product" onPress={handleAddProduct} />
+              <Button
+                title="Cancel"
+                color="red"
+                onPress={() => setIsAddModalVisible(false)}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -113,6 +271,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 16,
     color: '#333',
+  },
+  addButton: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 4,
+    marginBottom: 16,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   card: {
     backgroundColor: '#fff',
@@ -156,5 +326,56 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#777',
     marginBottom: 4,
+  },
+  cardActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 12,
+  },
+  button: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 4,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  deleteButton: {
+    backgroundColor: '#f44336',
+  },
+  deleteButtonText: {
+    color: '#fff',
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 8,
+    width: '80%',
+    maxWidth: 400,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    color: '#333',
+  },
+  input: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+  },
+  modalActions: {
+    marginTop: 16,
   },
 });
