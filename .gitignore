@@ -1,0 +1,43 @@
+# Ignore node_modules and build directories
+**/node_modules/
+**/build/
+**/dist/
+
+# Ignore logs
+logs/
+*.log
+npm-debug.log*
+
+# Ignore environment variable files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore IDE specific files
+.vscode/
+.idea/
+.DS_Store
+
+# Ignore OS generated files
+Thumbs.db\
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Ignore backend specific files
+backend/bin/
+backend/obj/
+backend/*.csproj.user
+backend/*.suo
+backend/*.user
+backend/*.userosscache
+backend/*.sln.docstates
+
+# Ignore frontend specific files
+frontend/.expo/
+frontend/.expo-shared/
+frontend/expo-env.d.ts
+frontend/coverage/
+frontend/web-build/
