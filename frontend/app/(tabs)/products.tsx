@@ -101,7 +101,7 @@ export default function ProductsScreen() {
       if (confirmation) {
         setProducts(prevProducts => prevProducts.filter(product => product.id !== productId));
       } else {
-        console.log("Delete cancelled"); 
+        console.log("Delete cancelled");
       }
     } else {
       // For mobile platforms (iOS/Android), use the React Native Alert
@@ -133,8 +133,23 @@ export default function ProductsScreen() {
   };
 
   const handleAddProduct = () => {
-    const newProductWithId = { ...newProduct, id: `${products.length + 1}` }; // Generate new ID
+    // Check if all fields are filled
+    if (!newProduct.name || !newProduct.category || !newProduct.price || !newProduct.description) {
+      // Check if the app is running on the web and use window.alert in that case
+      if (typeof window !== 'undefined') {
+        window.alert('Please fill in all fields before adding a product.');
+      } else {
+        // For mobile platforms (iOS/Android), use the React Native Alert
+        Alert.alert('Missing Fields', 'Please fill in all fields before adding a product.');
+      }
+      return; // Prevent adding the product if any field is empty
+    }
+
+    // Generate a new ID and add the product to the list
+    const newProductWithId = { ...newProduct, id: `${products.length + 1}` };
     setProducts(prevProducts => [...prevProducts, newProductWithId]);
+
+    // Close the modal and reset the new product state
     setIsAddModalVisible(false);
     setNewProduct({
       id: '',
@@ -144,6 +159,7 @@ export default function ProductsScreen() {
       description: '',
     });
   };
+
 
   return (
     <View style={styles.container}>
