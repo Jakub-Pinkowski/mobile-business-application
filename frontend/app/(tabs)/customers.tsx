@@ -1,109 +1,161 @@
-import { StyleSheet, Image, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  registrationDate: string;
+  phoneNumber: string;
+  address: string;
+}
 
-export default function TabTwoScreen() {
+const customersData: Customer[] = [
+  {
+    id: '1',
+    name: 'John Doe',
+    email: 'johndoe@example.com',
+    registrationDate: 'Jan 15, 2023',
+    phoneNumber: '+1 234 567 890',
+    address: '123 Elm Street, Springfield, IL, 62701',
+  },
+  {
+    id: '2',
+    name: 'Jane Smith',
+    email: 'janesmith@example.com',
+    registrationDate: 'Feb 10, 2023',
+    phoneNumber: '+1 234 567 891',
+    address: '456 Oak Avenue, Springfield, IL, 62702',
+  },
+  {
+    id: '3',
+    name: 'Alice Johnson',
+    email: 'alice.johnson@example.com',
+    registrationDate: 'Mar 20, 2023',
+    phoneNumber: '+1 234 567 892',
+    address: '789 Maple Road, Springfield, IL, 62703',
+  },
+  {
+    id: '4',
+    name: 'Bob Brown',
+    email: 'bob.brown@example.com',
+    registrationDate: 'Apr 12, 2023',
+    phoneNumber: '+1 234 567 893',
+    address: '321 Birch Lane, Springfield, IL, 62704',
+  },
+  {
+    id: '5',
+    name: 'Emily White',
+    email: 'emily.white@example.com',
+    registrationDate: 'May 30, 2023',
+    phoneNumber: '+1 234 567 894',
+    address: '654 Pine Street, Springfield, IL, 62705',
+  },
+  {
+    id: '6',
+    name: 'Michael Green',
+    email: 'michael.green@example.com',
+    registrationDate: 'Jun 25, 2023',
+    phoneNumber: '+1 234 567 895',
+    address: '987 Cedar Avenue, Springfield, IL, 62706',
+  },
+  {
+    id: '7',
+    name: 'Sophia Black',
+    email: 'sophia.black@example.com',
+    registrationDate: 'Jul 15, 2023',
+    phoneNumber: '+1 234 567 896',
+    address: '123 Walnut Street, Springfield, IL, 62707',
+  },
+];
+
+export default function CustomersScreen() {
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  const handlePress = (customerId: string) => {
+    setExpanded(prev => (prev === customerId ? null : customerId)); 
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Customers</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      <Text style={styles.header}>Customers</Text>
+
+      {customersData.map((customer) => (
+        <View key={customer.id} style={styles.card}>
+          <TouchableOpacity
+            onPress={() => handlePress(customer.id)}
+            style={styles.cardHeader}>
+            <Text style={styles.cardTitle}>{customer.name}</Text>
+            <Text style={styles.cardEmail}>{customer.email}</Text>
+          </TouchableOpacity>
+
+          {expanded === customer.id && (
+            <View style={styles.cardContent}>
+              <Text style={styles.cardLabel}>Phone Number:</Text>
+              <Text style={styles.cardValue}>{customer.phoneNumber}</Text>
+
+              <Text style={styles.cardLabel}>Address:</Text>
+              <Text style={styles.cardValue}>{customer.address}</Text>
+
+              <Text style={styles.cardLabel}>Registration Date:</Text>
+              <Text style={styles.cardValue}>{customer.registrationDate}</Text>
+            </View>
+          )}
+        </View>
+      ))}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    backgroundColor: '#F9F9F9',
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
-  titleContainer: {
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    color: '#333',
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  cardHeader: {
     flexDirection: 'row',
-    gap: 8,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  cardEmail: {
+    fontSize: 14,
+    color: '#555',
+  },
+  cardContent: {
+    marginTop: 8,
+  },
+  cardLabel: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#555',
+  },
+  cardValue: {
+    fontSize: 14,
+    color: '#777',
+    marginBottom: 4,
   },
 });
