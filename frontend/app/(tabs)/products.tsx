@@ -93,19 +93,33 @@ export default function ProductsScreen() {
   };
 
   const handleDeleteProduct = (productId: string) => {
-    Alert.alert('Delete Product', 'Are you sure you want to delete this product?', [
-      {
-        text: 'Cancel',
-      },
-      {
-        text: 'Delete',
-        onPress: () => {
-          setProducts(prevProducts => prevProducts.filter(product => product.id !== productId));
+
+    // Check if the app is running on web, and use window.alert on the web.
+    if (typeof window !== 'undefined') {
+      // Web environment
+      const confirmation = window.confirm('Are you sure you want to delete this product?');
+      if (confirmation) {
+        setProducts(prevProducts => prevProducts.filter(product => product.id !== productId));
+      } else {
+        console.log("Delete cancelled"); 
+      }
+    } else {
+      // For mobile platforms (iOS/Android), use the React Native Alert
+      Alert.alert('Delete Product', 'Are you sure you want to delete this product?', [
+        {
+          text: 'Cancel',
         },
-        style: 'destructive',
-      },
-    ]);
+        {
+          text: 'Delete',
+          onPress: () => {
+            setProducts(prevProducts => prevProducts.filter(product => product.id !== productId));
+          },
+          style: 'destructive',
+        },
+      ]);
+    }
   };
+
 
   const handleUpdateProduct = () => {
     if (editProduct) {
@@ -382,14 +396,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   modalActions: {
-    flexDirection: 'row', // Align buttons side by side
+    flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 16,
   },
   actionButton: {
     flex: 1,
     paddingVertical: 8,
-    marginHorizontal: 4, // Space between buttons
+    marginHorizontal: 4,
     borderRadius: 8,
   },
   updateButton: {
