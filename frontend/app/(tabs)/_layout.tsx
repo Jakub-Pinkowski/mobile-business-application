@@ -21,10 +21,10 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            position: 'absolute', // Transparent background for iOS to show the blur effect
+            position: 'absolute',
           },
           default: {
-            backgroundColor: Colors.light.background, // Set the background color for all tabs (white for light mode)
+            backgroundColor: Colors.light.background, 
           },
         }),
       }}
@@ -38,7 +38,7 @@ export default function TabLayout() {
             <IconSymbol size={28} name="house.fill" color={color} />
           ),
           tabBarStyle: {
-            backgroundColor: Colors.light.background, // Keep background white for Home tab
+            backgroundColor: Colors.light.background,
           },
         }}
       />
@@ -51,7 +51,7 @@ export default function TabLayout() {
             <IconSymbol size={28} name="paperplane.fill" color={color} />
           ),
           tabBarStyle: {
-            backgroundColor: Colors.light.background, // Keep background white for Products tab
+            backgroundColor: Colors.light.background, 
           },
         }}
       />
@@ -64,7 +64,7 @@ export default function TabLayout() {
             <IconSymbol size={28} name="paperplane.fill" color={color} />
           ),
           tabBarStyle: {
-            backgroundColor: Colors.light.background, // Keep background white for News tab
+            backgroundColor: Colors.light.background, 
           },
         }}
       />
@@ -77,7 +77,7 @@ export default function TabLayout() {
             <IconSymbol size={28} name="paperplane.fill" color={color} />
           ),
           tabBarStyle: {
-            backgroundColor: Colors.light.background, // Keep background white for Customers tab
+            backgroundColor: Colors.light.background, 
           },
         }}
       />

@@ -26,7 +26,7 @@ export default function HomePage() {
         <Link href="/customers" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
           <Text style={styles.buttonText}>Customers</Text>
         </Link>
-        <Text style={styles.description}>Manage and view customer data</Text>
+        <Text style={styles.description}>View customers data</Text>
       </View>
     </View>
   );
