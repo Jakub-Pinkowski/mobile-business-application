@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -14,7 +14,6 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        // Set active tab icon and text color using the main theme color
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
@@ -22,6 +21,12 @@ export default function TabLayout() {
         tabBarStyle: Platform.select({
           ios: {
             position: 'absolute',
+            backgroundColor: Colors[colorScheme ?? 'light'].background, // Dynamic background
+            borderTopWidth: 0, // Removing top border to get a cleaner design on iOS
+          },
+          android: {
+            backgroundColor: Colors[colorScheme ?? 'light'].background,
+            elevation: 10, // Elevation for Android to give the tab bar a shadow effect
           },
           default: {
             backgroundColor: Colors.light.background,
@@ -35,11 +40,9 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <IconSymbol size={30} name="house.fill" color={color} />
           ),
-          tabBarStyle: {
-            backgroundColor: Colors.light.background,
-          },
+          tabBarStyle: styles.tabBarStyle,
         }}
       />
       {/* Products Tab */}
@@ -48,11 +51,9 @@ export default function TabLayout() {
         options={{
           title: 'Products',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="products" color={color} />
+            <IconSymbol size={30} name="products" color={color} />
           ),
-          tabBarStyle: {
-            backgroundColor: Colors.light.background,
-          },
+          tabBarStyle: styles.tabBarStyle,
         }}
       />
       {/* News Tab */}
@@ -61,11 +62,9 @@ export default function TabLayout() {
         options={{
           title: 'News',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="notification" color={color} />
+            <IconSymbol size={30} name="notification" color={color} />
           ),
-          tabBarStyle: {
-            backgroundColor: Colors.light.background,
-          },
+          tabBarStyle: styles.tabBarStyle,
         }}
       />
       {/* Customers Tab */}
@@ -74,14 +73,18 @@ export default function TabLayout() {
         options={{
           title: 'Customers',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="customer" color={color} />
+            <IconSymbol size={30} name="customer" color={color} />
           ),
-          tabBarStyle: {
-            backgroundColor: Colors.light.background,
-          },
+          tabBarStyle: styles.tabBarStyle,
         }}
       />
-
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBarStyle: {
+    backgroundColor: Colors.light.background,
+    borderTopWidth: 0,
+  },
+});
