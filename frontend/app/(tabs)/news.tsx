@@ -1,5 +1,6 @@
 import React from 'react';
 import { FlatList, View, Text, StyleSheet } from 'react-native';
+import { Colors } from '@/constants/Colors';
 
 // Define the type for a news item
 interface NewsItem {
@@ -57,7 +58,7 @@ export default function NewsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: Colors.light.background,
     paddingHorizontal: 16,
     paddingTop: 16,
   },
