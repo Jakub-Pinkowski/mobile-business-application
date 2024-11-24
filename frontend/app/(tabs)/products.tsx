@@ -91,7 +91,9 @@ export default function ProductsScreen() {
     setIsModalVisible(true);
   };
 
+  // FIXME: Nothing happens after clicking the button, no alert shows up
   const handleDeleteProduct = (productId: string) => {
+    console.log("Deleting product with ID:", productId); // Debugging log
     Alert.alert('Delete Product', 'Are you sure you want to delete this product?', [
       {
         text: 'Cancel',
@@ -99,6 +101,7 @@ export default function ProductsScreen() {
       {
         text: 'Delete',
         onPress: () => {
+          console.log("Product deleted"); // Debugging log
           setProducts(prevProducts => prevProducts.filter(product => product.id !== productId));
         },
         style: 'destructive',

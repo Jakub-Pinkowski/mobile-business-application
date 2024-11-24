@@ -11,19 +11,19 @@ export default function HomePage() {
 
       <View style={styles.buttonContainer}>
         {/* Success Button (Green) */}
-        <Link href="/products" style={[styles.button, { backgroundColor: Colors.light.successButton }]}>
+        <Link href="/products" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
           <Text style={styles.buttonText}>Products</Text>
         </Link>
         <Text style={styles.description}>Browse our wide range of products</Text>
 
         {/* Danger Button (Red) */}
-        <Link href="/news" style={[styles.button, { backgroundColor: Colors.light.successButton }]}>
+        <Link href="/news" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
           <Text style={styles.buttonText}>News</Text>
         </Link>
         <Text style={styles.description}>Stay updated with the latest news</Text>
 
         {/* Another Success Button (Green) */}
-        <Link href="/customers" style={[styles.button, { backgroundColor: Colors.light.successButton }]}>
+        <Link href="/customers" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
           <Text style={styles.buttonText}>Customers</Text>
         </Link>
         <Text style={styles.description}>Manage and view customer data</Text>
