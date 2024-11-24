@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
+import { Colors } from '@/constants/Colors';
 
 export default function HomePage() {
   return (
@@ -9,20 +10,20 @@ export default function HomePage() {
       <Text style={styles.subheader}>Choose a section to explore:</Text>
 
       <View style={styles.buttonContainer}>
-        {/* Products Button */}
-        <Link href="/products" style={styles.button}>
+        {/* Success Button (Green) */}
+        <Link href="/products" style={[styles.button, { backgroundColor: Colors.light.successButton }]}>
           <Text style={styles.buttonText}>Products</Text>
         </Link>
         <Text style={styles.description}>Browse our wide range of products</Text>
 
-        {/* News Button */}
-        <Link href="/news" style={styles.button}>
+        {/* Danger Button (Red) */}
+        <Link href="/news" style={[styles.button, { backgroundColor: Colors.light.successButton }]}>
           <Text style={styles.buttonText}>News</Text>
         </Link>
         <Text style={styles.description}>Stay updated with the latest news</Text>
 
-        {/* Customers Button */}
-        <Link href="/customers" style={styles.button}>
+        {/* Another Success Button (Green) */}
+        <Link href="/customers" style={[styles.button, { backgroundColor: Colors.light.successButton }]}>
           <Text style={styles.buttonText}>Customers</Text>
         </Link>
         <Text style={styles.description}>Manage and view customer data</Text>
@@ -56,25 +57,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    backgroundColor: '#4CAF50',
     paddingVertical: 12,
     paddingHorizontal: 24,
     marginBottom: 16,
     borderRadius: 8,
     width: '80%',
-    alignItems: 'center', // Ensure button text is centered
-    justifyContent: 'center', // Ensure button text is centered vertically
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
   },
   buttonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center', // Center the text horizontally
+    textAlign: 'center',
   },
   description: {
     fontSize: 14,
     color: '#777',
-    marginBottom: 24, // Space between button and description
-    textAlign: 'center', // Center the description text
+    marginBottom: 24,
+    textAlign: 'center',
   },
 });
