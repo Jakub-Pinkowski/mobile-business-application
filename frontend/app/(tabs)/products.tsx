@@ -200,12 +200,16 @@ export default function ProductsScreen() {
             />
 
             <View style={styles.modalActions}>
-              <Button title="Update Product" onPress={handleUpdateProduct} />
-              <Button
-                title="Cancel"
-                color={Colors.light.danger}
-                onPress={() => setIsModalVisible(false)}
-              />
+              <TouchableOpacity
+                style={[styles.actionButton, styles.updateButton]}
+                onPress={handleUpdateProduct}>
+                <Text style={styles.actionButtonText}>Update Product</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.actionButton, styles.cancelButton]}
+                onPress={() => setIsModalVisible(false)}>
+                <Text style={styles.actionButtonText}>Cancel</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -243,12 +247,16 @@ export default function ProductsScreen() {
             />
 
             <View style={styles.modalActions}>
-              <Button title="Add Product" onPress={handleAddProduct} />
-              <Button
-                title="Cancel"
-                color={Colors.light.danger}
-                onPress={() => setIsAddModalVisible(false)}
-              />
+              <TouchableOpacity
+                style={[styles.actionButton, styles.updateButton]}
+                onPress={handleAddProduct}>
+                <Text style={styles.actionButtonText}>Add Product</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.actionButton, styles.cancelButton]}
+                onPress={() => setIsAddModalVisible(false)}>
+                <Text style={styles.actionButtonText}>Cancel</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -374,6 +382,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   modalActions: {
+    flexDirection: 'row', // Align buttons side by side
+    justifyContent: 'space-between',
     marginTop: 16,
   },
+  actionButton: {
+    flex: 1,
+    paddingVertical: 8,
+    marginHorizontal: 4, // Space between buttons
+    borderRadius: 8,
+  },
+  updateButton: {
+    backgroundColor: Colors.light.primary,
+  },
+  cancelButton: {
+    backgroundColor: Colors.light.danger,
+  },
+  actionButtonText: {
+    textAlign: 'center',
+    color: Colors.light.background,
+    fontWeight: 'bold',
+  },
+
 });
