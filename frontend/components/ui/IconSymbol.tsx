@@ -10,7 +10,9 @@ const MAPPING = {
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
-  'notification': 'notifications', // Mapping for the notification icon
+  'notification': 'notifications',
+  'products': 'inventory',
+  'customer': 'person',
 } as Partial<
   Record<
     string, // Allow any string, which includes MaterialIcons names

@@ -48,7 +48,7 @@ export default function TabLayout() {
         options={{
           title: 'Products',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <IconSymbol size={28} name="products" color={color} />
           ),
           tabBarStyle: {
             backgroundColor: Colors.light.background,
@@ -68,19 +68,20 @@ export default function TabLayout() {
           },
         }}
       />
-      {/* Customers Tab */}
+      {/* News Tab */}
       <Tabs.Screen
         name="customers"
         options={{
           title: 'Customers',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <IconSymbol size={28} name="customer" color={color} />
           ),
           tabBarStyle: {
             backgroundColor: Colors.light.background,
           },
         }}
       />
+
     </Tabs>
   );
 }
