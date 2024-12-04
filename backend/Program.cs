@@ -8,16 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Register the DatabaseService as a singleton or scoped service
+string dbPath = Path.Combine(Directory.GetCurrentDirectory(), "BackendAPI.db3");
+builder.Services.AddSingleton<DatabaseService>(new DatabaseService(dbPath)); // Registers DatabaseService
+
 // Create and configure the application
 var app = builder.Build();
 
 // Local testing (call the DatabaseService directly here)
-// Use the current directory to set the path for the SQLite DB
-string dbPath = Path.Combine(Directory.GetCurrentDirectory(), "BackendAPI.db3");
-var dbService = new DatabaseService(dbPath); 
-
 // Test the database
-await dbService.TestDatabaseAsync(); // Test and output data to console
+await app.Services.GetRequiredService<DatabaseService>().TestDatabaseAsync(); // Test and output data to console
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -28,6 +28,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Weather forecast endpoint (example)
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -35,7 +36,7 @@ var summaries = new[]
 
 app.MapGet("/weatherforecast", () =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
+    var forecast = Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
@@ -47,6 +48,20 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();
+
+// Products endpoint
+app.MapGet("/products", async (DatabaseService dbService) =>
+{
+    var products = await dbService.GetItemsAsync<Product>();
+    return Results.Ok(products);
+});
+
+// Categories endpoint
+app.MapGet("/categories", async (DatabaseService dbService) =>
+{
+    var categories = await dbService.GetItemsAsync<Category>();
+    return Results.Ok(categories);
+});
 
 app.Run();
 
