@@ -8,7 +8,6 @@ namespace BackendAPI.Models
         public int Id { get; set; }
 
         public DateTime Date { get; set; }
-
         [NotNull]
         public decimal TotalAmount { get; set; }
 

@@ -18,3 +18,5 @@ namespace BackendAPI.Models
         public int SupplierId { get; set; }
     }
 }
+
+
