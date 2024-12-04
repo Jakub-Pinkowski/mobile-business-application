@@ -10,6 +10,7 @@ interface Product {
   description: string;
 }
 
+// TODO: Update it all to match the DB
 const productsData: Product[] = [
   {
     id: '1',

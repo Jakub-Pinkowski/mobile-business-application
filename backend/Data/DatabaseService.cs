@@ -84,6 +84,15 @@ namespace BackendAPI.Services
                 await SaveItemAsync(address);
             }
 
+            // Save addresses and keep track of their IDs
+            var addressIds = new List<int>();
+            foreach (var address in addresses)
+            {
+                await SaveItemAsync(address);
+                addressIds.Add(address.Id); // Save the ID of the inserted address
+            }
+
+
             // Populate Category
             var categories = new List<Category>
             {
@@ -98,14 +107,49 @@ namespace BackendAPI.Services
                 await SaveItemAsync(category);
             }
 
-            // Populate Customer
+            // Populate Customer and associate each with an Address
             var customers = new List<Customer>
             {
-                new Customer { Name = "John Doe", Email = "john.doe@example.com" },
-                new Customer { Name = "Jane Smith", Email = "jane.smith@example.com" },
-                new Customer { Name = "Alice Johnson", Email = "alice.johnson@example.com" },
-                new Customer { Name = "Bob Brown", Email = "bob.brown@example.com" },
-                new Customer { Name = "Charlie Davis", Email = "charlie.davis@example.com" }
+                new Customer
+                {
+                    Name = "John Doe",
+                    Email = "john.doe@example.com",
+                    RegistrationDate = new DateTime(2023, 1, 15),
+                    PhoneNumber = "+1 234 567 890",
+                    AddressId = addressIds[0]
+                },
+                new Customer
+                {
+                    Name = "Jane Smith",
+                    Email = "jane.smith@example.com",
+                    RegistrationDate = new DateTime(2023, 3, 22),
+                    PhoneNumber = "+1 987 654 321",
+                    AddressId = addressIds[1]
+                },
+                new Customer
+                {
+                    Name = "Alice Johnson",
+                    Email = "alice.johnson@example.com",
+                    RegistrationDate = new DateTime(2023, 6, 5),
+                    PhoneNumber = "+1 555 123 456",
+                    AddressId = addressIds[2]
+                },
+                new Customer
+                {
+                    Name = "Bob Brown",
+                    Email = "bob.brown@example.com",
+                    RegistrationDate = new DateTime(2023, 9, 10),
+                    PhoneNumber = "+1 444 567 890",
+                    AddressId = addressIds[3]
+                },
+                new Customer
+                {
+                    Name = "Charlie Davis",
+                    Email = "charlie.davis@example.com",
+                    RegistrationDate = new DateTime(2023, 12, 1),
+                    PhoneNumber = "+1 333 678 901",
+                    AddressId = addressIds[4]
+                }
             };
             foreach (var customer in customers)
             {
@@ -143,16 +187,78 @@ namespace BackendAPI.Services
             // Populate Product
             var products = new List<Product>
             {
-                new Product { Name = "Running Shoes", Price = 59.99m, CategoryId = 1, SupplierId = 1 },
-                new Product { Name = "Hiking Backpack", Price = 89.99m, CategoryId = 2, SupplierId = 2 },
-                new Product { Name = "Water Bottle", Price = 9.99m, CategoryId = 3, SupplierId = 3 },
-                new Product { Name = "Tent", Price = 199.99m, CategoryId = 4, SupplierId = 4 },
-                new Product { Name = "Sleeping Bag", Price = 49.99m, CategoryId = 5, SupplierId = 5 }
+                new Product
+                {
+                    Name = "Mountain Bike",
+                    Price = 500m,
+                    Description = "Durable mountain bike designed for all terrains and tough rides.",
+                    CategoryId = 1,
+                    SupplierId = 1
+                },
+                new Product
+                {
+                    Name = "Road Bike",
+                    Price = 400m,
+                    Description = "Lightweight road bike, perfect for fast riding on paved roads.",
+                    CategoryId = 1,
+                    SupplierId = 2
+                },
+                new Product
+                {
+                    Name = "Cycling Cap",
+                    Price = 20m,
+                    Description = "Comfortable cycling cap to protect you from the sun during long rides.",
+                    CategoryId = 2,
+                    SupplierId = 3
+                },
+                new Product
+                {
+                    Name = "Sports Cap",
+                    Price = 15m,
+                    Description = "Stylish sports cap with adjustable straps for a perfect fit.",
+                    CategoryId = 2,
+                    SupplierId = 4
+                },
+                new Product
+                {
+                    Name = "Backpack 20L",
+                    Price = 45m,
+                    Description = "Compact backpack with 20L capacity, perfect for day trips.",
+                    CategoryId = 3,
+                    SupplierId = 5
+                },
+                new Product
+                {
+                    Name = "Backpack 40L",
+                    Price = 70m,
+                    Description = "Large 40L backpack with multiple compartments for extended trips.",
+                    CategoryId = 3,
+                    SupplierId = 1
+                },
+                new Product
+                {
+                    Name = "Running Shoes",
+                    Price = 80m,
+                    Description = "Breathable running shoes designed for comfort during long runs.",
+                    CategoryId = 4,
+                    SupplierId = 2
+                },
+                new Product
+                {
+                    Name = "Trekking Boots",
+                    Price = 120m,
+                    Description = "Sturdy trekking boots for outdoor adventures and rough terrains.",
+                    CategoryId = 4,
+                    SupplierId = 3
+                }
             };
+
             foreach (var product in products)
             {
                 await SaveItemAsync(product);
             }
+
+
 
             // Populate Review (Assuming products and customers already exist)
             var reviews = new List<Review>
