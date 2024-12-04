@@ -32,7 +32,7 @@ app.UseCors("AllowLocalhost");
 
 // Reset the database at startup
 // TODO: Use when needed
-await databaseService.ResetDatabaseAsync();
+// await databaseService.ResetDatabaseAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
