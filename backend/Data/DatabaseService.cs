@@ -43,6 +43,18 @@ namespace BackendAPI.Services
             return _database.DeleteAsync(item);
         }
 
+        // Drop all tables for all models
+        public async Task DropAllTablesAsync()
+        {
+            await _database.DropTableAsync<Address>();
+            await _database.DropTableAsync<Category>();
+            await _database.DropTableAsync<Customer>();
+            await _database.DropTableAsync<Invoice>();
+            await _database.DropTableAsync<Product>();
+            await _database.DropTableAsync<Review>();
+            await _database.DropTableAsync<Supplier>();
+        }
+
         // Create tables for all models
         private async Task CreateTablesAsync()
         {
@@ -168,8 +180,13 @@ namespace BackendAPI.Services
             {
                 await SaveItemAsync(supplier);
             }
+        }
 
-
+        public async Task ResetDatabaseAsync()
+        {
+            await DropAllTablesAsync();
+            await CreateTablesAsync();
+            await PopulateTablesWithDummyDataAsync();
         }
     }
 }
