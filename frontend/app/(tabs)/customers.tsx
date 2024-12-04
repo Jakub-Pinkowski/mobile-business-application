@@ -4,7 +4,7 @@ import { Colors } from '@/constants/Colors';
 import axios from 'axios';
 
 interface Customer {
-  id?: number; // Make id optional for new customers
+  id?: number; 
   name: string;
   email: string;
   registrationDate: string;
@@ -16,8 +16,8 @@ export default function CustomersScreen() {
   const [customersData, setCustomersData] = useState<Customer[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false); // State for Add Modal
-  const [editCustomer, setEditCustomer] = useState<Customer | null>(null); // For editing a customer
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false); 
+  const [editCustomer, setEditCustomer] = useState<Customer | null>(null); 
   const [newCustomer, setNewCustomer] = useState<Customer>({
     name: '',
     email: '',
@@ -30,14 +30,14 @@ export default function CustomersScreen() {
   const fetchCustomers = async () => {
     try {
       const response = await axios.get('http://localhost:5094/customers');
-      setCustomersData(response.data); // Populate state with the fetched customer data
+      setCustomersData(response.data); 
     } catch (error) {
       console.error('Error fetching customers:', error);
     }
   };
 
   useEffect(() => {
-    fetchCustomers(); // Fetch customers on component mount
+    fetchCustomers(); 
   }, []);
 
   const handlePress = (customerId: string) => {
@@ -71,7 +71,7 @@ export default function CustomersScreen() {
 
     try {
       const response = await axios.post('http://localhost:5094/customers', newCustomer);
-      setCustomersData(prevCustomers => [...prevCustomers, response.data]); // Add newly created customer to list
+      setCustomersData(prevCustomers => [...prevCustomers, response.data]); 
       setIsAddModalVisible(false);
       setNewCustomer({
         name: '',
