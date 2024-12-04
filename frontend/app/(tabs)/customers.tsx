@@ -235,15 +235,15 @@ export default function CustomersScreen() {
             <TextInput
               style={styles.input}
               placeholder="Address ID"
-              value={newCustomer.addressId?.toString() || ''}
-              onChangeText={text => setNewCustomer(prev => ({ ...prev, addressId: Number(text) }))}
+              value={newCustomer.addressId === 0 ? '' : newCustomer.addressId.toString()} 
+              onChangeText={text => setNewCustomer(prev => ({ ...prev, addressId: text ? Number(text) : 0 }))}
               keyboardType="numeric"
             />
             <View style={styles.modalActions}>
               <TouchableOpacity
                 style={[styles.actionButton, styles.updateButton]}
                 onPress={handleAddCustomer}>
-                <Text style={styles.actionButtonText}>Add Customer</Text>
+                <Text style={styles.actionButtonText}>Add</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.actionButton, styles.cancelButton]}
