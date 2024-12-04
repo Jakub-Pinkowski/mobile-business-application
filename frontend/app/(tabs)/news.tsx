@@ -1,45 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FlatList, View, Text, StyleSheet } from 'react-native';
 import { Colors } from '@/constants/Colors';
+import axios from 'axios';
 
-// Define the type for a news item
+// Define the type for a news ite
 interface NewsItem {
-  id: string;
+  id: number; 
   title: string;
   description: string;
-  date: string;
+  date: string; 
 }
 
-// interface NewsItem {
-//   id: number; 
-//   title: string;
-//   description: string;
-//   date: string; 
-// }
-
-const newsData: NewsItem[] = [
-  {
-    id: '1',
-    title: 'New Office Opening',
-    description: 'Our company has officially inaugurated a new office in downtown New York. This state-of-the-art facility is designed to enhance collaboration, foster innovation, and provide a comfortable workspace for all our employees. We look forward to hosting many successful meetings and events here.',
-    date: 'Nov 20, 2024',
-  },
-  {
-    id: '2',
-    title: 'Quarterly Revenue Report',
-    description: 'We are thrilled to announce that we achieved record-breaking revenues in the fourth quarter of this year! Thanks to the hard work and dedication of our team, we surpassed all projections, setting a strong foundation for continued growth in the coming year. Detailed insights will be shared during our next town hall.',
-    date: 'Nov 18, 2024',
-  },
-  {
-    id: '3',
-    title: 'Employee of the Month',
-    description: 'A big congratulations to Jane Doe for being awarded Employee of the Month! Her outstanding performance, commitment to excellence, and ability to go above and beyond have made a remarkable impact. Jane has set a stellar example for all of us, and we’re lucky to have her on the team!',
-    date: 'Nov 15, 2024',
-  },
-];
-
-
 export default function NewsScreen() {
+  const [newsData, setNewsData] = useState<NewsItem[]>([]);
+  // Fetch news from the backend
+  const fetchNews = async () => {
+    try {
+      const response = await axios.get('http://localhost:5094/news');
+      setNewsData(response.data); // Populate state with the fetched news data
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchNews(); // Fetch news on component mount
+  }, []);
+
   const renderNewsItem = ({ item }: { item: NewsItem }) => (
     <View style={styles.newsTile}>
       <Text style={styles.newsTitle}>{item.title}</Text>
@@ -54,7 +41,7 @@ export default function NewsScreen() {
       <FlatList
         data={newsData}
         renderItem={renderNewsItem}
-        keyExtractor={(item: NewsItem) => item.id}
+        keyExtractor={(item: NewsItem) => item.id.toString()} // Convert ID to string
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
       />

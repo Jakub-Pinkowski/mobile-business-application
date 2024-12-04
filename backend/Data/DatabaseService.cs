@@ -50,6 +50,8 @@ namespace BackendAPI.Services
             await _database.DropTableAsync<Category>();
             await _database.DropTableAsync<Customer>();
             await _database.DropTableAsync<Invoice>();
+            await _database.DropTableAsync<InvoiceItem>();
+            await _database.DropTableAsync<News>();
             await _database.DropTableAsync<Product>();
             await _database.DropTableAsync<Review>();
             await _database.DropTableAsync<Supplier>();
@@ -58,14 +60,16 @@ namespace BackendAPI.Services
         // Create tables for all models
         public async Task CreateTablesAsync()
         {
-            await _database.CreateTableAsync<Product>();
+
+            await _database.CreateTableAsync<Address>();
             await _database.CreateTableAsync<Category>();
             await _database.CreateTableAsync<Customer>();
-            await _database.CreateTableAsync<Address>();
-            await _database.CreateTableAsync<Supplier>();
-            await _database.CreateTableAsync<Review>();
             await _database.CreateTableAsync<Invoice>();
             await _database.CreateTableAsync<InvoiceItem>();
+            await _database.CreateTableAsync<News>();
+            await _database.CreateTableAsync<Product>();
+            await _database.CreateTableAsync<Review>();
+            await _database.CreateTableAsync<Supplier>();
         }
 
         public async Task PopulateTablesWithDummyDataAsync()
@@ -183,6 +187,37 @@ namespace BackendAPI.Services
             {
                 await SaveItemAsync(invoiceItem);
             }
+
+            // Populate News
+            var news = new List<News>
+                {
+                    new News
+                    {
+                        Title = "New Office Opening",
+                        Description = "Our company has officially inaugurated a new office in downtown New York. This state-of-the-art facility is designed to enhance collaboration, foster innovation, and provide a comfortable workspace for all our employees. We look forward to hosting many successful meetings and events here.",
+                        Date = DateTime.Now  // Automatically use today's date
+                    },
+                    new News
+                    {
+                        Title = "Quarterly Revenue Report",
+                        Description = "We are thrilled to announce that we achieved record-breaking revenues in the fourth quarter of this year! Thanks to the hard work and dedication of our team, we surpassed all projections, setting a strong foundation for continued growth in the coming year. Detailed insights will be shared during our next town hall.",
+                        Date = DateTime.Now  // Automatically use today's date
+                    },
+                    new News
+                    {
+                        Title = "Employee of the Month",
+                        Description = "A big congratulations to Jane Doe for being awarded Employee of the Month! Her outstanding performance, commitment to excellence, and ability to go above and beyond have made a remarkable impact. Jane has set a stellar example for all of us, and we’re lucky to have her on the team!",
+                        Date = DateTime.Now  // Automatically use today's date
+                    }
+                };
+
+            // Save each news item
+            foreach (var newsItem in news)
+            {
+                await SaveItemAsync(newsItem);
+            }
+
+
 
             // Populate Product
             var products = new List<Product>

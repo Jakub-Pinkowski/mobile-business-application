@@ -32,7 +32,7 @@ app.UseCors("AllowLocalhost");
 
 // Reset the database at startup
 // TODO: Use when needed
-// await databaseService.ResetDatabaseAsync();
+await databaseService.ResetDatabaseAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -72,6 +72,12 @@ app.MapGet("/invoiceitems", async (DatabaseService dbService) =>
 {
     var invoiceItems = await dbService.GetItemsAsync<InvoiceItem>();
     return Results.Ok(invoiceItems);
+});
+
+app.MapGet("/news", async (DatabaseService dbService) =>
+{
+    var news = await dbService.GetItemsAsync<News>();
+    return Results.Ok(news);
 });
 
 app.MapGet("/productreviews", async (DatabaseService dbService) =>

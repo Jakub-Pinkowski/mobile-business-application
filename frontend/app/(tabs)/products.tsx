@@ -12,6 +12,8 @@ interface Product {
   supplierId: number; // Foreign key to Supplier
 }
 
+// TODO: Make all of this work with the new db setup
+
 export default function ProductsScreen() {
   const [expanded, setExpanded] = useState<number | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
