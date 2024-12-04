@@ -196,7 +196,7 @@ export default function CustomersScreen() {
               <TouchableOpacity
                 style={[styles.actionButton, styles.updateButton]}
                 onPress={handleUpdateCustomer}>
-                <Text style={styles.actionButtonText}>Update Customer</Text>
+                <Text style={styles.actionButtonText}>Update</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.actionButton, styles.cancelButton]}
