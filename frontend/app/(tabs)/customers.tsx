@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/Colors';
+import axios from 'axios';
 
 interface Customer {
   id: string;
@@ -8,79 +9,26 @@ interface Customer {
   email: string;
   registrationDate: string;
   phoneNumber: string;
-  address: string;
+  addressId: number; // Foreign key to Address (we'll need to map it to a full address later)
 }
 
-// interface Customer {
-//   id: string;
-//   name: string;
-//   email: string;
-//   registrationDate: string;
-//   phoneNumber: string;
-//   addressId: number; // Foreign key to Address
-// }
-
-const customersData: Customer[] = [
-  {
-    id: '1',
-    name: 'John Doe',
-    email: 'johndoe@example.com',
-    registrationDate: 'Jan 15, 2023',
-    phoneNumber: '+1 234 567 890',
-    address: '123 Elm Street, Springfield, IL, 62701',
-  },
-  {
-    id: '2',
-    name: 'Jane Smith',
-    email: 'janesmith@example.com',
-    registrationDate: 'Feb 10, 2023',
-    phoneNumber: '+1 234 567 891',
-    address: '456 Oak Avenue, Springfield, IL, 62702',
-  },
-  {
-    id: '3',
-    name: 'Alice Johnson',
-    email: 'alice.johnson@example.com',
-    registrationDate: 'Mar 20, 2023',
-    phoneNumber: '+1 234 567 892',
-    address: '789 Maple Road, Springfield, IL, 62703',
-  },
-  {
-    id: '4',
-    name: 'Bob Brown',
-    email: 'bob.brown@example.com',
-    registrationDate: 'Apr 12, 2023',
-    phoneNumber: '+1 234 567 893',
-    address: '321 Birch Lane, Springfield, IL, 62704',
-  },
-  {
-    id: '5',
-    name: 'Emily White',
-    email: 'emily.white@example.com',
-    registrationDate: 'May 30, 2023',
-    phoneNumber: '+1 234 567 894',
-    address: '654 Pine Street, Springfield, IL, 62705',
-  },
-  {
-    id: '6',
-    name: 'Michael Green',
-    email: 'michael.green@example.com',
-    registrationDate: 'Jun 25, 2023',
-    phoneNumber: '+1 234 567 895',
-    address: '987 Cedar Avenue, Springfield, IL, 62706',
-  },
-  {
-    id: '7',
-    name: 'Sophia Black',
-    email: 'sophia.black@example.com',
-    registrationDate: 'Jul 15, 2023',
-    phoneNumber: '+1 234 567 896',
-    address: '123 Walnut Street, Springfield, IL, 62707',
-  },
-];
-
 export default function CustomersScreen() {
+  const [customersData, setCustomersData] = useState<Customer[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
+
+  // Fetch customers from the backend
+  const fetchCustomers = async () => {
+    try {
+      const response = await axios.get('http://localhost:5094/customers');
+      setCustomersData(response.data); // Populate state with the fetched customer data
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCustomers(); // Fetch customers on component mount
+  }, []);
 
   const handlePress = (customerId: string) => {
     setExpanded(prev => (prev === customerId ? null : customerId)); 
@@ -104,8 +52,8 @@ export default function CustomersScreen() {
               <Text style={styles.cardLabel}>Phone Number:</Text>
               <Text style={styles.cardValue}>{customer.phoneNumber}</Text>
 
-              <Text style={styles.cardLabel}>Address:</Text>
-              <Text style={styles.cardValue}>{customer.address}</Text>
+              <Text style={styles.cardLabel}>Address ID:</Text>
+              <Text style={styles.cardValue}>{customer.addressId}</Text>
 
               <Text style={styles.cardLabel}>Registration Date:</Text>
               <Text style={styles.cardValue}>{customer.registrationDate}</Text>

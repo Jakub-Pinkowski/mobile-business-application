@@ -13,11 +13,26 @@ string dbPath = Path.Combine(Directory.GetCurrentDirectory(), "BackendAPI.db3");
 var databaseService = new DatabaseService(dbPath);
 builder.Services.AddSingleton(databaseService); // Registers DatabaseService
 
+// Add CORS services
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost", policy =>
+    {
+        policy.WithOrigins("http://localhost:8081") // Allow frontend running on Expo or React Native
+              .AllowAnyMethod() // Allow all HTTP methods (GET, POST, etc.)
+              .AllowAnyHeader(); // Allow all headers
+    });
+});
+
 // Create and configure the application
 var app = builder.Build();
 
+// Enable CORS with the policy
+app.UseCors("AllowLocalhost");
+
 // Reset the database at startup
-await databaseService.ResetDatabaseAsync();
+// TODO: Use when needed
+// await databaseService.ResetDatabaseAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -28,29 +43,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Weather forecast endpoint (example)
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
-
 // Add all tables with endpoints
-
 app.MapGet("/address", async (DatabaseService dbService) =>
 {
     var addresses = await dbService.GetItemsAsync<Address>();
