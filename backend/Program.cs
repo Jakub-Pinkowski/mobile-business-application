@@ -1,11 +1,23 @@
+using BackendAPI.Services;
+using BackendAPI.Models;
+using System.IO;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Create and configure the application
 var app = builder.Build();
+
+// Local testing (call the DatabaseService directly here)
+// Use the current directory to set the path for the SQLite DB
+string dbPath = Path.Combine(Directory.GetCurrentDirectory(), "BackendAPI.db3");
+var dbService = new DatabaseService(dbPath); 
+
+// Test the database
+await dbService.TestDatabaseAsync(); // Test and output data to console
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -56,7 +56,7 @@ namespace BackendAPI.Services
         }
 
         // Create tables for all models
-        private async Task CreateTablesAsync()
+        public async Task CreateTablesAsync()
         {
             await _database.CreateTableAsync<Product>();
             await _database.CreateTableAsync<Category>();
@@ -187,6 +187,27 @@ namespace BackendAPI.Services
             await DropAllTablesAsync();
             await CreateTablesAsync();
             await PopulateTablesWithDummyDataAsync();
+        }
+
+        public async Task TestDatabaseAsync()
+        {
+            // Test fetching all products from the Product table
+            var products = await _database.Table<Product>().ToListAsync();
+            Console.WriteLine("Products:");
+            foreach (var product in products)
+            {
+                Console.WriteLine($"Id: {product.Id}, Name: {product.Name}, Price: {product.Price}");
+            }
+
+            // Test fetching all categories from the Category table
+            var categories = await _database.Table<Category>().ToListAsync();
+            Console.WriteLine("Categories:");
+            foreach (var category in categories)
+            {
+                Console.WriteLine($"Id: {category.Id}, Name: {category.Name}");
+            }
+
+            // You can add similar blocks to check other tables, like Customers, Suppliers, etc.
         }
     }
 }
