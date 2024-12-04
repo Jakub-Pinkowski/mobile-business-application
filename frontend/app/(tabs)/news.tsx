@@ -10,6 +10,13 @@ interface NewsItem {
   date: string;
 }
 
+// interface NewsItem {
+//   id: number; 
+//   title: string;
+//   description: string;
+//   date: string; 
+// }
+
 const newsData: NewsItem[] = [
   {
     id: '1',

@@ -10,6 +10,15 @@ interface Product {
   description: string;
 }
 
+// interface Product {
+//   id: number; 
+//   name: string;
+//   price: number; 
+//   description: string;
+//   categoryId: number; // Foreign key to Category
+//   supplierId: number; // Foreign key to Supplier
+// }
+
 // TODO: Update it all to match the DB
 const productsData: Product[] = [
   {

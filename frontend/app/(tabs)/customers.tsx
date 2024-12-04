@@ -11,6 +11,15 @@ interface Customer {
   address: string;
 }
 
+// interface Customer {
+//   id: string;
+//   name: string;
+//   email: string;
+//   registrationDate: string;
+//   phoneNumber: string;
+//   addressId: number; // Foreign key to Address
+// }
+
 const customersData: Customer[] = [
   {
     id: '1',
