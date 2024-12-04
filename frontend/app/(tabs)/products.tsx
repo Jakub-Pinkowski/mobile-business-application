@@ -1,99 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Button, Alert } from 'react-native';
 import { Colors } from '@/constants/Colors';
+import axios from 'axios';
 
 interface Product {
-  id: string;
+  id?: number;  // Change id to be a number
   name: string;
-  category: string;
-  price: string;
+  price: number;
   description: string;
+  categoryId: number; // Foreign key to Category
+  supplierId: number; // Foreign key to Supplier
 }
 
-// interface Product {
-//   id: number; 
-//   name: string;
-//   price: number; 
-//   description: string;
-//   categoryId: number; // Foreign key to Category
-//   supplierId: number; // Foreign key to Supplier
-// }
-
-// TODO: Update it all to match the DB
-const productsData: Product[] = [
-  {
-    id: '1',
-    name: 'Mountain Bike',
-    category: 'Bikes',
-    price: '$500',
-    description: 'Durable mountain bike designed for all terrains and tough rides.',
-  },
-  {
-    id: '2',
-    name: 'Road Bike',
-    category: 'Bikes',
-    price: '$400',
-    description: 'Lightweight road bike, perfect for fast riding on paved roads.',
-  },
-  {
-    id: '3',
-    name: 'Cycling Cap',
-    category: 'Caps',
-    price: '$20',
-    description: 'Comfortable cycling cap to protect you from the sun during long rides.',
-  },
-  {
-    id: '4',
-    name: 'Sports Cap',
-    category: 'Caps',
-    price: '$15',
-    description: 'Stylish sports cap with adjustable straps for a perfect fit.',
-  },
-  {
-    id: '5',
-    name: 'Backpack 20L',
-    category: 'Backpacks',
-    price: '$45',
-    description: 'Compact backpack with 20L capacity, perfect for day trips.',
-  },
-  {
-    id: '6',
-    name: 'Backpack 40L',
-    category: 'Backpacks',
-    price: '$70',
-    description: 'Large 40L backpack with multiple compartments for extended trips.',
-  },
-  {
-    id: '7',
-    name: 'Running Shoes',
-    category: 'Shoes',
-    price: '$80',
-    description: 'Breathable running shoes designed for comfort during long runs.',
-  },
-  {
-    id: '8',
-    name: 'Trekking Boots',
-    category: 'Shoes',
-    price: '$120',
-    description: 'Sturdy trekking boots for outdoor adventures and rough terrains.',
-  },
-];
-
 export default function ProductsScreen() {
-  const [expanded, setExpanded] = useState<string | null>(null);
-  const [products, setProducts] = useState(productsData);
+  const [expanded, setExpanded] = useState<number | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false); // State for new product modal
   const [newProduct, setNewProduct] = useState<Product>({
-    id: '',
     name: '',
-    category: '',
-    price: '',
+    price: 0,
     description: '',
+    categoryId: 0,
+    supplierId: 0
   });
 
-  const handlePress = (productId: string) => {
+  // Fetch products from the backend
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get('http://localhost:5094/products');
+      setProducts(response.data); // Populate state with the fetched products
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts(); // Fetch products on component mount
+  }, []);
+
+  const handlePress = (productId: number) => {
     setExpanded(prev => (prev === productId ? null : productId));
   };
 
@@ -102,8 +49,7 @@ export default function ProductsScreen() {
     setIsModalVisible(true);
   };
 
-  const handleDeleteProduct = (productId: string) => {
-
+  const handleDeleteProduct = (productId: number) => {
     // Check if the app is running on web, and use window.alert on the web.
     if (typeof window !== 'undefined') {
       // Web environment
@@ -130,7 +76,6 @@ export default function ProductsScreen() {
     }
   };
 
-
   const handleUpdateProduct = () => {
     if (editProduct) {
       const updatedProducts = products.map(product =>
@@ -144,7 +89,7 @@ export default function ProductsScreen() {
 
   const handleAddProduct = () => {
     // Check if all fields are filled
-    if (!newProduct.name || !newProduct.category || !newProduct.price || !newProduct.description) {
+    if (!newProduct.name || !newProduct.price || !newProduct.description || !newProduct.categoryId || !newProduct.supplierId) {
       // Check if the app is running on the web and use window.alert in that case
       if (typeof window !== 'undefined') {
         window.alert('Please fill in all fields before adding a product.');
@@ -155,18 +100,18 @@ export default function ProductsScreen() {
       return; // Prevent adding the product if any field is empty
     }
 
-    // Generate a new ID and add the product to the list
-    const newProductWithId = { ...newProduct, id: `${products.length + 1}` };
+    // Generate a new ID and add the product to the list (convert ID to number)
+    const newProductWithId = { ...newProduct, id: products.length + 1 };  // Use a number for ID
     setProducts(prevProducts => [...prevProducts, newProductWithId]);
 
     // Close the modal and reset the new product state
     setIsAddModalVisible(false);
     setNewProduct({
-      id: '',
       name: '',
-      category: '',
-      price: '',
+      price: 0,
       description: '',
+      categoryId: 0,
+      supplierId: 0
     });
   };
 
@@ -180,14 +125,14 @@ export default function ProductsScreen() {
       </TouchableOpacity>
 
       {products.map((product) => (
-        <View key={product.id} style={styles.card}>
-          <TouchableOpacity onPress={() => handlePress(product.id)} style={styles.cardHeader}>
+        <View key={product.id as number} style={styles.card}>
+          <TouchableOpacity onPress={() => handlePress(product.id as number)} style={styles.cardHeader}>
             <Text style={styles.cardTitle}>{product.name}</Text>
-            <Text style={styles.cardCategory}>{product.category}</Text>
+            <Text style={styles.cardCategory}>{product.categoryId}</Text>
             <Text style={styles.cardPrice}>{product.price}</Text>
           </TouchableOpacity>
 
-          {expanded === product.id && (
+          {expanded === (product.id as number) && (
             <View style={styles.cardContent}>
               <Text style={styles.cardLabel}>Description:</Text>
               <Text style={styles.cardValue}>{product.description}</Text>
@@ -199,7 +144,7 @@ export default function ProductsScreen() {
 
                 <TouchableOpacity
                   style={[styles.button, styles.deleteButton]}
-                  onPress={() => handleDeleteProduct(product.id)}>
+                  onPress={() => handleDeleteProduct(product.id as number)}>
                   <Text style={[styles.buttonText, styles.deleteButtonText]}>Delete</Text>
                 </TouchableOpacity>
               </View>
@@ -207,6 +152,7 @@ export default function ProductsScreen() {
           )}
         </View>
       ))}
+
 
       {/* Modal for editing a product */}
       <Modal visible={isModalVisible} animationType="slide" transparent={true}>
@@ -222,15 +168,24 @@ export default function ProductsScreen() {
             />
             <TextInput
               style={styles.input}
-              placeholder="Category"
-              value={editProduct?.category || ''}
-              onChangeText={text => setEditProduct(prev => ({ ...prev!, category: text }))}
+              placeholder="Category ID"
+              value={editProduct?.categoryId?.toString() || ''}
+              onChangeText={text => setEditProduct(prev => ({ ...prev!, categoryId: Number(text) }))}
+              keyboardType="numeric"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Supplier ID"
+              value={editProduct?.supplierId?.toString() || ''}
+              onChangeText={text => setEditProduct(prev => ({ ...prev!, supplierId: Number(text) }))}
+              keyboardType="numeric"
             />
             <TextInput
               style={styles.input}
               placeholder="Price"
-              value={editProduct?.price || ''}
-              onChangeText={text => setEditProduct(prev => ({ ...prev!, price: text }))}
+              value={editProduct?.price.toString() || ''}
+              onChangeText={text => setEditProduct(prev => ({ ...prev!, price: Number(text) }))}
+              keyboardType="numeric"
             />
             <TextInput
               style={styles.input}
@@ -269,15 +224,24 @@ export default function ProductsScreen() {
             />
             <TextInput
               style={styles.input}
-              placeholder="Category"
-              value={newProduct.category}
-              onChangeText={text => setNewProduct(prev => ({ ...prev, category: text }))}
+              placeholder="Category ID"
+              value={newProduct.categoryId?.toString() || ''}
+              onChangeText={text => setNewProduct(prev => ({ ...prev, categoryId: Number(text) }))}
+              keyboardType="numeric"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Supplier ID"
+              value={editProduct?.supplierId?.toString() || ''}
+              onChangeText={text => setNewProduct(prev => ({ ...prev!, supplierId: Number(text) }))}
+              keyboardType="numeric"
             />
             <TextInput
               style={styles.input}
               placeholder="Price"
-              value={newProduct.price}
-              onChangeText={text => setNewProduct(prev => ({ ...prev, price: text }))}
+              value={newProduct.price.toString() || ''}
+              onChangeText={text => setNewProduct(prev => ({ ...prev, price: Number(text) }))}
+              keyboardType="numeric"
             />
             <TextInput
               style={styles.input}
