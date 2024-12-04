@@ -162,29 +162,41 @@ export default function CustomersScreen() {
       ))}
 
       {/* Modal for editing a customer */}
+      {/* Modal for editing a customer */}
       <Modal visible={isModalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Edit Customer</Text>
 
+            {/* Name Field */}
+            <Text style={styles.label}>Name</Text>
             <TextInput
               style={styles.input}
               placeholder="Name"
               value={editCustomer?.name || ''}
               onChangeText={text => setEditCustomer(prev => ({ ...prev!, name: text }))}
             />
+
+            {/* Email Field */}
+            <Text style={styles.label}>Email</Text>
             <TextInput
               style={styles.input}
               placeholder="Email"
               value={editCustomer?.email || ''}
               onChangeText={text => setEditCustomer(prev => ({ ...prev!, email: text }))}
             />
+
+            {/* Phone Number Field */}
+            <Text style={styles.label}>Phone Number</Text>
             <TextInput
               style={styles.input}
               placeholder="Phone Number"
               value={editCustomer?.phoneNumber || ''}
               onChangeText={text => setEditCustomer(prev => ({ ...prev!, phoneNumber: text }))}
             />
+
+            {/* Address ID Field */}
+            <Text style={styles.label}>Address ID</Text>
             <TextInput
               style={styles.input}
               placeholder="Address ID"
@@ -192,6 +204,7 @@ export default function CustomersScreen() {
               onChangeText={text => setEditCustomer(prev => ({ ...prev!, addressId: Number(text) }))}
               keyboardType="numeric"
             />
+
             <View style={styles.modalActions}>
               <TouchableOpacity
                 style={[styles.actionButton, styles.updateButton]}
@@ -214,31 +227,43 @@ export default function CustomersScreen() {
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Add New Customer</Text>
 
+            {/* Name Field */}
+            <Text style={styles.label}>Name</Text>
             <TextInput
               style={styles.input}
-              placeholder="Name"
+              placeholder=""  // Empty placeholder
               value={newCustomer.name}
               onChangeText={text => setNewCustomer(prev => ({ ...prev, name: text }))}
             />
+
+            {/* Email Field */}
+            <Text style={styles.label}>Email</Text>
             <TextInput
               style={styles.input}
-              placeholder="Email"
+              placeholder=""  // Empty placeholder
               value={newCustomer.email}
               onChangeText={text => setNewCustomer(prev => ({ ...prev, email: text }))}
             />
+
+            {/* Phone Number Field */}
+            <Text style={styles.label}>Phone Number</Text>
             <TextInput
               style={styles.input}
-              placeholder="Phone Number"
+              placeholder=""  // Empty placeholder
               value={newCustomer.phoneNumber}
               onChangeText={text => setNewCustomer(prev => ({ ...prev, phoneNumber: text }))}
             />
+
+            {/* Address ID Field */}
+            <Text style={styles.label}>Address ID</Text>
             <TextInput
               style={styles.input}
-              placeholder="Address ID"
-              value={newCustomer.addressId === 0 ? '' : newCustomer.addressId.toString()} 
+              placeholder=""  // Empty placeholder
+              value={newCustomer.addressId === 0 ? '' : newCustomer.addressId.toString()}
               onChangeText={text => setNewCustomer(prev => ({ ...prev, addressId: text ? Number(text) : 0 }))}
               keyboardType="numeric"
             />
+
             <View style={styles.modalActions}>
               <TouchableOpacity
                 style={[styles.actionButton, styles.updateButton]}
@@ -254,6 +279,7 @@ export default function CustomersScreen() {
           </View>
         </View>
       </Modal>
+
     </View>
   );
 }
@@ -379,5 +405,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#333',
   },
 });
