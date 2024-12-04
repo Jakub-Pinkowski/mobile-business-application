@@ -1,6 +1,5 @@
 using SQLite;
 
-
 namespace BackendAPI.Models
 {
     public class News
