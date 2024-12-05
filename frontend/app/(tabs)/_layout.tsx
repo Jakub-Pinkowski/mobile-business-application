@@ -112,6 +112,17 @@ export default function TabLayout() {
           tabBarStyle: styles.tabBarStyle,
         }}
       />
+      {/* Suppliers Tab */}
+      <Tabs.Screen
+        name="suppliers"
+        options={{
+          title: 'Suppliers',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={30} name="suppliers" color={color} />
+          ),
+          tabBarStyle: styles.tabBarStyle,
+        }}
+      />
     </Tabs>
 
   );
