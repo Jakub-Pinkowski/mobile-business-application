@@ -172,7 +172,6 @@ export default function CustomersScreen() {
             <Text style={styles.label}>Name</Text>
             <TextInput
               style={styles.input}
-              placeholder="Name"
               value={editCustomer?.name || ''}
               onChangeText={text => setEditCustomer(prev => ({ ...prev!, name: text }))}
             />
@@ -181,7 +180,6 @@ export default function CustomersScreen() {
             <Text style={styles.label}>Email</Text>
             <TextInput
               style={styles.input}
-              placeholder="Email"
               value={editCustomer?.email || ''}
               onChangeText={text => setEditCustomer(prev => ({ ...prev!, email: text }))}
             />
@@ -190,7 +188,6 @@ export default function CustomersScreen() {
             <Text style={styles.label}>Phone Number</Text>
             <TextInput
               style={styles.input}
-              placeholder="Phone Number"
               value={editCustomer?.phoneNumber || ''}
               onChangeText={text => setEditCustomer(prev => ({ ...prev!, phoneNumber: text }))}
             />
@@ -199,7 +196,6 @@ export default function CustomersScreen() {
             <Text style={styles.label}>Address ID</Text>
             <TextInput
               style={styles.input}
-              placeholder="Address ID"
               value={editCustomer?.addressId?.toString() || ''}
               onChangeText={text => setEditCustomer(prev => ({ ...prev!, addressId: Number(text) }))}
               keyboardType="numeric"
