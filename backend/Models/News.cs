@@ -2,7 +2,7 @@ using SQLite;
 
 namespace BackendAPI.Models
 {
-    public class News
+    public class News : IIdentifiable
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }

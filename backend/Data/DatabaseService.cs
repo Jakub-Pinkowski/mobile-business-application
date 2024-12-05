@@ -1,7 +1,7 @@
 using SQLite;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BackendAPI.Models; // This will reference your models
+using BackendAPI.Models;
 
 namespace BackendAPI.Services
 {
@@ -14,31 +14,61 @@ namespace BackendAPI.Services
             _database = new SQLiteAsyncConnection(dbPath);
         }
 
-        public Task CreateTableAsync<T>() where T : new()
+        // Create table for a given model
+        public Task CreateTableAsync<T>() where T : class, IIdentifiable, new()
         {
             return _database.CreateTableAsync<T>();
         }
 
-        public Task<List<T>> GetItemsAsync<T>() where T : new()
+        // Get all items of a given model
+        public Task<List<T>> GetItemsAsync<T>() where T : class, IIdentifiable, new()
         {
             return _database.Table<T>().ToListAsync();
         }
 
-        public Task<int> SaveItemAsync<T>(T item) where T : new()
+        // Get a single item by ID
+        public Task<T> GetItemByIdAsync<T>(int id) where T : class, IIdentifiable, new()
         {
-            var propertyInfo = item?.GetType().GetProperty("Id");
-            if (propertyInfo != null)
+            return _database.Table<T>().Where(i => i.Id == id).FirstOrDefaultAsync();
+        }
+
+        // Save an item (Insert or Update)
+        public Task<int> SaveItemAsync<T>(T item) where T : class, IIdentifiable, new()
+        {
+            var value = item?.GetType().GetProperty("Id")?.GetValue(item);
+            if (value != null && (int)value != 0)
             {
-                var value = propertyInfo.GetValue(item);
-                if (value != null && (int)value != 0)
-                {
-                    return _database.UpdateAsync(item);
-                }
+                // If the item already has an ID, update it
+                return _database.UpdateAsync(item);
             }
+            // If no ID, insert it
             return _database.InsertAsync(item);
         }
 
-        public Task<int> DeleteItemAsync<T>(T item) where T : new()
+        // Update an existing item by ID
+        public Task<int> UpdateItemAsync<T>(int id, T updatedItem) where T : class, IIdentifiable, new()
+        {
+            var existingItem = _database.Table<T>().Where(i => i.Id == id).FirstOrDefaultAsync().Result;
+            if (existingItem != null)
+            {
+                return _database.UpdateAsync(updatedItem); // Updates the item
+            }
+            return Task.FromResult(0); // No item found
+        }
+
+        // Delete an item by ID
+        public Task<int> DeleteItemAsync<T>(int id) where T : class, IIdentifiable, new()
+        {
+            var item = _database.Table<T>().Where(i => i.Id == id).FirstOrDefaultAsync().Result;
+            if (item != null)
+            {
+                return _database.DeleteAsync(item);
+            }
+            return Task.FromResult(0); // No item found to delete
+        }
+
+        // Delete an item by its object instance
+        public Task<int> DeleteItemAsync<T>(T item) where T : class, IIdentifiable, new()
         {
             return _database.DeleteAsync(item);
         }

@@ -1,75 +1,77 @@
 using BackendAPI.Services;
 using BackendAPI.Models;
 
-namespace BackendAPI.Extensions;
-
-public static class RouteExtensions
+namespace BackendAPI.Extensions
 {
-    public static IEndpointRouteBuilder ConfigureRoutes(this IEndpointRouteBuilder app)
+    public static class RouteExtensions
     {
-        // Address Endpoints
-        app.MapGet("/address", async (DatabaseService dbService) =>
+        // Generic method to map all CRUD operations for a given model type
+        private static void MapCrudOperations<T>(this IEndpointRouteBuilder app, string endpoint) where T : class, IIdentifiable, new()
         {
-            var addresses = await dbService.GetItemsAsync<Address>();
-            return Results.Ok(addresses);
-        });
+            // GET endpoint to fetch all records for the model
+            app.MapGet(endpoint, async (DatabaseService dbService) =>
+            {
+                var items = await dbService.GetItemsAsync<T>();
+                return Results.Ok(items);
+            });
 
-        // Categories Endpoint
-        app.MapGet("/categories", async (DatabaseService dbService) =>
+            // POST endpoint to add a new record
+            app.MapPost(endpoint, async (DatabaseService dbService, T newItem) =>
+            {
+                try
+                {
+                    await dbService.SaveItemAsync(newItem);  // Use SaveItemAsync instead of InsertItemAsync
+                    return Results.Created(endpoint, newItem); // 201 Created response
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(detail: ex.Message, statusCode: 500); // Correct usage of Problem method
+                }
+            });
+
+            // PUT endpoint to update an existing record
+            app.MapPut($"{endpoint}/{{id}}", async (DatabaseService dbService, int id, T updatedItem) =>
+            {
+                try
+                {
+                    var result = await dbService.UpdateItemAsync(id, updatedItem);
+                    return result > 0 ? Results.Ok(updatedItem) : Results.NotFound();
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(detail: ex.Message, statusCode: 500); // Correct usage of Problem method
+                }
+            });
+
+            // DELETE endpoint to remove a record by ID
+            app.MapDelete($"{endpoint}/{{id}}", async (DatabaseService dbService, int id) =>
+            {
+                try
+                {
+                    var deleted = await dbService.DeleteItemAsync<T>(id);
+                    return deleted > 0 ? Results.NoContent() : Results.NotFound();
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(detail: ex.Message, statusCode: 500); // Correct usage of Problem method
+                }
+            });
+        }
+
+        public static IEndpointRouteBuilder ConfigureRoutes(this IEndpointRouteBuilder app)
         {
-            var categories = await dbService.GetItemsAsync<Category>();
-            return Results.Ok(categories);
-        });
+            // Map CRUD operations for each table using the MapCrudOperations helper
+            app.MapCrudOperations<Address>("/address");
+            app.MapCrudOperations<Category>("/categories");
+            app.MapCrudOperations<Customer>("/customers");
+            app.MapCrudOperations<InvoiceItem>("/invoiceitems");
+            app.MapCrudOperations<Invoice>("/invoices");
+            app.MapCrudOperations<News>("/news");
+            app.MapCrudOperations<Review>("/productreviews");
+            app.MapCrudOperations<Product>("/products");
+            app.MapCrudOperations<Supplier>("/suppliers");
 
-        // Customers Endpoint
-        app.MapGet("/customers", async (DatabaseService dbService) =>
-        {
-            var customers = await dbService.GetItemsAsync<Customer>();
-            return Results.Ok(customers);
-        });
-
-        // Invoice Items Endpoint
-        app.MapGet("/invoiceitems", async (DatabaseService dbService) =>
-        {
-            var invoiceItems = await dbService.GetItemsAsync<InvoiceItem>();
-            return Results.Ok(invoiceItems);
-        });
-
-        // Invoices Endpoint
-        app.MapGet("/invoices", async (DatabaseService dbService) =>
-        {
-            var invoices = await dbService.GetItemsAsync<Invoice>();
-            return Results.Ok(invoices);
-        });
-
-        // News Endpoint
-        app.MapGet("/news", async (DatabaseService dbService) =>
-        {
-            var news = await dbService.GetItemsAsync<News>();
-            return Results.Ok(news);
-        });
-
-        // Product Reviews Endpoint
-        app.MapGet("/productreviews", async (DatabaseService dbService) =>
-        {
-            var productReviews = await dbService.GetItemsAsync<Review>();
-            return Results.Ok(productReviews);
-        });
-
-        // Products Endpoint
-        app.MapGet("/products", async (DatabaseService dbService) =>
-        {
-            var products = await dbService.GetItemsAsync<Product>();
-            return Results.Ok(products);
-        });
-
-        // Suppliers Endpoint
-        app.MapGet("/suppliers", async (DatabaseService dbService) =>
-        {
-            var suppliers = await dbService.GetItemsAsync<Supplier>();
-            return Results.Ok(suppliers);
-        });
-
-        return app;
+            return app;
+        }
     }
 }
