@@ -34,6 +34,7 @@ export default function TabLayout() {
         }),
       }}
     >
+      {/* TODO: Update all the tabs starting from */}
       {/* Home Tab */}
       <Tabs.Screen
         name="index"
@@ -80,9 +81,9 @@ export default function TabLayout() {
       />
       {/* Adresses Tab */}
       <Tabs.Screen
-        name="addresses"
+        name="address"
         options={{
-          title: 'Addresses',
+          title: 'Address',
           tabBarIcon: ({ color }) => (
             <IconSymbol size={30} name="address" color={color} />
           ),
