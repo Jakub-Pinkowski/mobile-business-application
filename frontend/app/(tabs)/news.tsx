@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginBottom: 16,
     paddingHorizontal: 8,
-    textAlignVertical: 'top',  // Ensures the text starts from the top of the input field
+    textAlignVertical: 'top',  
   },
   modalActions: {
     flexDirection: 'row',
