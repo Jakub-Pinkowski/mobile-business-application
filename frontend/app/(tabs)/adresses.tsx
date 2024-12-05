@@ -101,18 +101,30 @@ export default function AddressesScreen() {
 
     // Handle Delete Address Item
     const handleDeleteAddressItem = (addressId: number) => {
-        Alert.alert('Delete Address Item', 'Are you sure you want to delete this address?', [
-            {
-                text: 'Cancel',
-            },
-            {
-                text: 'Delete',
-                onPress: () => {
-                    deleteAddressFromBackend(addressId);
+        // Check if the app is running on web, and use window.confirm on the web.
+        if (typeof window !== 'undefined') {
+            // Web environment
+            const confirmation = window.confirm('Are you sure you want to delete this address?');
+            if (confirmation) {
+                deleteAddressFromBackend(addressId); 
+            } else {
+                console.log('Delete cancelled');
+            }
+        } else {
+            // For mobile platforms (iOS/Android), use the React Native Alert
+            Alert.alert('Delete Customer', 'Are you sure you want to delete this address?', [
+                {
+                    text: 'Cancel',
                 },
-                style: 'destructive',
-            },
-        ]);
+                {
+                    text: 'Delete',
+                    onPress: () => {
+                        deleteAddressFromBackend(addressId); 
+                    },
+                    style: 'destructive',
+                },
+            ]);
+        }
     };
 
     // Function to delete address item from the backend and update UI

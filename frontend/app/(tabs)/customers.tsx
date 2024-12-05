@@ -119,7 +119,7 @@ export default function CustomersScreen() {
       // Web environment
       const confirmation = window.confirm('Are you sure you want to delete this customer?');
       if (confirmation) {
-        deleteCustomerFromBackend(customerId); // Delete the customer from the backend
+        deleteCustomerFromBackend(customerId); 
       } else {
         console.log('Delete cancelled');
       }
@@ -132,7 +132,7 @@ export default function CustomersScreen() {
         {
           text: 'Delete',
           onPress: () => {
-            deleteCustomerFromBackend(customerId); // Delete the customer from the backend
+            deleteCustomerFromBackend(customerId);
           },
           style: 'destructive',
         },
@@ -317,7 +317,7 @@ export default function CustomersScreen() {
           </View>
         </View>
       </Modal>
-      
+
     </View>
   );
 }
