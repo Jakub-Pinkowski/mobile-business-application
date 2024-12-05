@@ -4,7 +4,7 @@ import { Colors } from '@/constants/Colors';
 import axios from 'axios';
 
 interface Customer {
-  id?: number; 
+  id?: number;
   name: string;
   email: string;
   registrationDate: string;
@@ -16,8 +16,8 @@ export default function CustomersScreen() {
   const [customersData, setCustomersData] = useState<Customer[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false); 
-  const [editCustomer, setEditCustomer] = useState<Customer | null>(null); 
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [editCustomer, setEditCustomer] = useState<Customer | null>(null);
   const [newCustomer, setNewCustomer] = useState<Customer>({
     name: '',
     email: '',
@@ -30,14 +30,14 @@ export default function CustomersScreen() {
   const fetchCustomers = async () => {
     try {
       const response = await axios.get('http://localhost:5094/customers');
-      setCustomersData(response.data); 
+      setCustomersData(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
     }
   };
 
   useEffect(() => {
-    fetchCustomers(); 
+    fetchCustomers();
   }, []);
 
   const handlePress = (customerId: string) => {
@@ -69,9 +69,17 @@ export default function CustomersScreen() {
       return;
     }
 
+    const isValidEmail = (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const isValidPhone = (phone: string): boolean => /^\d{8,14}$/.test(phone);
+
+    if (!isValidEmail(newCustomer.email) || !isValidPhone(newCustomer.phoneNumber)) {
+      Alert.alert('Invalid Fields', 'Please provide a valid email and phone number.');
+      return;
+    }
+
     try {
       const response = await axios.post('http://localhost:5094/customers', newCustomer);
-      setCustomersData(prevCustomers => [...prevCustomers, response.data]); 
+      setCustomersData(prevCustomers => [...prevCustomers, response.data]);
       setIsAddModalVisible(false);
       setNewCustomer({
         name: '',
