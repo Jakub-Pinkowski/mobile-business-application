@@ -1,76 +1,126 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Button, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import axios from 'axios';
 
 interface Product {
-  id?: number;  // Change id to be a number
+  id?: number;
   name: string;
   price: number;
   description: string;
-  categoryId: number; // Foreign key to Category
-  supplierId: number; // Foreign key to Supplier
+  categoryId: number;
+  supplierId: number;
 }
 
-// TODO: Make all of this work with the new db setup
-
 export default function ProductsScreen() {
-  const [expanded, setExpanded] = useState<number | null>(null);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [productsData, setProductsData] = useState<Product[]>([]);
+  const [expanded, setExpanded] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editProduct, setEditProduct] = useState<Product | null>(null);
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false); // State for new product modal
-  const [newProduct, setNewProduct] = useState<Product>({
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [editProductItem, setEditProductItem] = useState<Product | null>(null);
+  const [newProductItem, setNewProductItem] = useState<Product>({
     name: '',
     price: 0,
     description: '',
     categoryId: 0,
-    supplierId: 0
+    supplierId: 0,
   });
 
   // Fetch products from the backend
   const fetchProducts = async () => {
     try {
       const response = await axios.get('http://localhost:5094/products');
-      setProducts(response.data); // Populate state with the fetched products
+      setProductsData(response.data);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
   };
 
   useEffect(() => {
-    fetchProducts(); // Fetch products on component mount
+    fetchProducts();
   }, []);
 
-  const handlePress = (productId: number) => {
+  const handlePress = (productId: string) => {
     setExpanded(prev => (prev === productId ? null : productId));
   };
 
-  const handleEditProduct = (product: Product) => {
-    setEditProduct(product);
+  // Handle Edit Product Item
+  const handleEditProductItem = (productItem: Product) => {
+    setEditProductItem(productItem);
     setIsModalVisible(true);
   };
 
-  const handleDeleteProduct = (productId: number) => {
-    // Check if the app is running on web, and use window.alert on the web.
+  // Handle Update Product Item
+  const handleUpdateProductItem = async () => {
+    if (editProductItem) {
+      const updatedProductItem = {
+        ...editProductItem,
+        // Assuming date is not part of the Product object, you can handle other fields
+      };
+
+      try {
+        const response = await axios.put(`http://localhost:5094/products/${editProductItem.id}`, updatedProductItem);
+        if (response.status === 200) {
+          // Optimistically update the UI
+          const updatedProducts = productsData.map(productItem =>
+            productItem.id === editProductItem.id ? updatedProductItem : productItem
+          );
+          setProductsData(updatedProducts);
+          setIsModalVisible(false);
+          setEditProductItem(null);
+          Alert.alert('Success', 'Product updated successfully');
+        } else {
+          Alert.alert('Error', 'Failed to update the product');
+        }
+      } catch (error) {
+        console.error('Error updating product item:', error);
+        Alert.alert('Error', 'Failed to update the product');
+      }
+    }
+  };
+
+  // Handle Add Product Item
+  const handleAddProductItem = async () => {
+    if (!newProductItem.name || !newProductItem.description || !newProductItem.price) {
+      Alert.alert('Missing Fields', 'Please fill in all fields before adding a product.');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5094/products', newProductItem);
+      setProductsData(prevProducts => [...prevProducts, response.data]);
+      setIsAddModalVisible(false);
+      setNewProductItem({
+        name: '',
+        price: 0,
+        description: '',
+        categoryId: 0,
+        supplierId: 0,
+      });
+    } catch (error) {
+      console.error('Error adding product item:', error);
+      Alert.alert('Error', 'Failed to add the product');
+    }
+  };
+
+  // Handle Delete Product Item
+  const handleDeleteProductItem = (productId: number) => {
     if (typeof window !== 'undefined') {
-      // Web environment
-      const confirmation = window.confirm('Are you sure you want to delete this product?');
+      const confirmation = window.confirm('Are you sure you want to delete this product item?');
       if (confirmation) {
-        setProducts(prevProducts => prevProducts.filter(product => product.id !== productId));
+        deleteProductFromBackend(productId);
       } else {
-        console.log("Delete cancelled");
+        console.log('Delete cancelled');
       }
     } else {
-      // For mobile platforms (iOS/Android), use the React Native Alert
-      Alert.alert('Delete Product', 'Are you sure you want to delete this product?', [
+      Alert.alert('Delete News Item', 'Are you sure you want to delete this news item?', [
         {
           text: 'Cancel',
         },
         {
           text: 'Delete',
           onPress: () => {
-            setProducts(prevProducts => prevProducts.filter(product => product.id !== productId));
+            deleteProductFromBackend(productId);
           },
           style: 'destructive',
         },
@@ -78,45 +128,25 @@ export default function ProductsScreen() {
     }
   };
 
-  const handleUpdateProduct = () => {
-    if (editProduct) {
-      const updatedProducts = products.map(product =>
-        product.id === editProduct.id ? editProduct : product
-      );
-      setProducts(updatedProducts);
-      setIsModalVisible(false);
-      setEditProduct(null);
-    }
-  };
+  // Function to delete product item from the backend and update UI
+  const deleteProductFromBackend = async (productId: number) => {
+    try {
+      setProductsData(prevProducts => prevProducts.filter(productItem => productItem.id !== productId));
 
-  const handleAddProduct = () => {
-    // Check if all fields are filled
-    if (!newProduct.name || !newProduct.price || !newProduct.description || !newProduct.categoryId || !newProduct.supplierId) {
-      // Check if the app is running on the web and use window.alert in that case
-      if (typeof window !== 'undefined') {
-        window.alert('Please fill in all fields before adding a product.');
+      const response = await axios.delete(`http://localhost:5094/products/${productId}`);
+      if (response.status === 200) {
+        fetchProducts();
+        Alert.alert('Success', 'Product item deleted successfully');
       } else {
-        // For mobile platforms (iOS/Android), use the React Native Alert
-        Alert.alert('Missing Fields', 'Please fill in all fields before adding a product.');
+        fetchProducts();
+        Alert.alert('Error', 'Failed to delete the product item');
       }
-      return; // Prevent adding the product if any field is empty
+    } catch (error) {
+      console.error('Error deleting product item:', error);
+      fetchProducts();
+      Alert.alert('Error', 'Failed to delete the product item');
     }
-
-    // Generate a new ID and add the product to the list (convert ID to number)
-    const newProductWithId = { ...newProduct, id: products.length + 1 };  // Use a number for ID
-    setProducts(prevProducts => [...prevProducts, newProductWithId]);
-
-    // Close the modal and reset the new product state
-    setIsAddModalVisible(false);
-    setNewProduct({
-      name: '',
-      price: 0,
-      description: '',
-      categoryId: 0,
-      supplierId: 0
-    });
   };
-
 
   return (
     <View style={styles.container}>
@@ -126,28 +156,33 @@ export default function ProductsScreen() {
         <Text style={styles.addButtonText}>Add New Product</Text>
       </TouchableOpacity>
 
-      {products.map((product) => (
-        <View key={product.id as number} style={styles.card}>
-          <TouchableOpacity onPress={() => handlePress(product.id as number)} style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>{product.name}</Text>
-            <Text style={styles.cardCategory}>{product.categoryId}</Text>
-            <Text style={styles.cardPrice}>{product.price}</Text>
+      {productsData.map((productItem) => (
+        <View key={productItem.id} style={styles.card}>
+          <TouchableOpacity
+            onPress={() => handlePress(productItem.id?.toString() || '')}
+            style={styles.cardHeader}>
+            <Text style={styles.cardTitle}>{productItem.name}</Text>
           </TouchableOpacity>
 
-          {expanded === (product.id as number) && (
+          {expanded === productItem.id?.toString() && (
             <View style={styles.cardContent}>
               <Text style={styles.cardLabel}>Description:</Text>
-              <Text style={styles.cardValue}>{product.description}</Text>
+              <Text style={styles.cardValue}>{productItem.description}</Text>
+
+              <Text style={styles.cardLabel}>Price:</Text>
+              <Text style={styles.cardValue}>${productItem.price.toFixed(2)}</Text>
 
               <View style={styles.cardActions}>
-                <TouchableOpacity style={styles.button} onPress={() => handleEditProduct(product)}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => handleEditProductItem(productItem)}>
                   <Text style={styles.buttonText}>Edit</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   style={[styles.button, styles.deleteButton]}
-                  onPress={() => handleDeleteProduct(product.id as number)}>
-                  <Text style={[styles.buttonText, styles.deleteButtonText]}>Delete</Text>
+                  onPress={() => handleDeleteProductItem(productItem.id!)}>
+                  <Text style={styles.buttonText}>Delete</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -155,52 +190,43 @@ export default function ProductsScreen() {
         </View>
       ))}
 
-
-      {/* Modal for editing a product */}
+      {/* Modal for editing a product item */}
       <Modal visible={isModalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Edit Product</Text>
 
+            {/* Name Field */}
+            <Text style={styles.label}>Name</Text>
             <TextInput
               style={styles.input}
-              placeholder="Product Name"
-              value={editProduct?.name || ''}
-              onChangeText={text => setEditProduct(prev => ({ ...prev!, name: text }))}
+              value={editProductItem?.name || ''}
+              onChangeText={text => setEditProductItem(prev => ({ ...prev!, name: text }))}
             />
+
+            {/* Price Field */}
+            <Text style={styles.label}>Price</Text>
             <TextInput
               style={styles.input}
-              placeholder="Category ID"
-              value={editProduct?.categoryId?.toString() || ''}
-              onChangeText={text => setEditProduct(prev => ({ ...prev!, categoryId: Number(text) }))}
+              value={editProductItem?.price.toString() || ''}
+              onChangeText={text => setEditProductItem(prev => ({ ...prev!, price: parseFloat(text) }))}
               keyboardType="numeric"
             />
+
+            {/* Description Field */}
+            <Text style={styles.label}>Description</Text>
             <TextInput
-              style={styles.input}
-              placeholder="Supplier ID"
-              value={editProduct?.supplierId?.toString() || ''}
-              onChangeText={text => setEditProduct(prev => ({ ...prev!, supplierId: Number(text) }))}
-              keyboardType="numeric"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Price"
-              value={editProduct?.price.toString() || ''}
-              onChangeText={text => setEditProduct(prev => ({ ...prev!, price: Number(text) }))}
-              keyboardType="numeric"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Description"
-              value={editProduct?.description || ''}
-              onChangeText={text => setEditProduct(prev => ({ ...prev!, description: text }))}
+              style={[styles.input, { height: 100 }]}  // Increased height for multiline input
+              value={editProductItem?.description || ''}
+              onChangeText={text => setEditProductItem(prev => ({ ...prev!, description: text }))}
+              multiline={true}
             />
 
             <View style={styles.modalActions}>
               <TouchableOpacity
                 style={[styles.actionButton, styles.updateButton]}
-                onPress={handleUpdateProduct}>
-                <Text style={styles.actionButtonText}>Update Product</Text>
+                onPress={handleUpdateProductItem}>
+                <Text style={styles.actionButtonText}>Update</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.actionButton, styles.cancelButton]}
@@ -212,51 +238,43 @@ export default function ProductsScreen() {
         </View>
       </Modal>
 
-      {/* Modal for adding a new product */}
+      {/* Modal for adding a new product item */}
       <Modal visible={isAddModalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Add New Product</Text>
 
+            {/* Name Field */}
+            <Text style={styles.label}>Name</Text>
             <TextInput
               style={styles.input}
-              placeholder="Product Name"
-              value={newProduct.name}
-              onChangeText={text => setNewProduct(prev => ({ ...prev, name: text }))}
+              value={newProductItem.name}
+              onChangeText={text => setNewProductItem(prev => ({ ...prev, name: text }))}
             />
+
+            {/* Price Field */}
+            <Text style={styles.label}>Price</Text>
             <TextInput
               style={styles.input}
-              placeholder="Category ID"
-              value={newProduct.categoryId?.toString() || ''}
-              onChangeText={text => setNewProduct(prev => ({ ...prev, categoryId: Number(text) }))}
+              value={newProductItem.price.toString()}
+              onChangeText={text => setNewProductItem(prev => ({ ...prev, price: parseFloat(text) }))}
               keyboardType="numeric"
             />
+
+            {/* Description Field */}
+            <Text style={styles.label}>Description</Text>
             <TextInput
-              style={styles.input}
-              placeholder="Supplier ID"
-              value={editProduct?.supplierId?.toString() || ''}
-              onChangeText={text => setNewProduct(prev => ({ ...prev!, supplierId: Number(text) }))}
-              keyboardType="numeric"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Price"
-              value={newProduct.price.toString() || ''}
-              onChangeText={text => setNewProduct(prev => ({ ...prev, price: Number(text) }))}
-              keyboardType="numeric"
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Description"
-              value={newProduct.description}
-              onChangeText={text => setNewProduct(prev => ({ ...prev, description: text }))}
+              style={[styles.input, { height: 100 }]}  // Increased height for multiline input
+              value={newProductItem.description}
+              onChangeText={text => setNewProductItem(prev => ({ ...prev, description: text }))}
+              multiline={true}
             />
 
             <View style={styles.modalActions}>
               <TouchableOpacity
                 style={[styles.actionButton, styles.updateButton]}
-                onPress={handleAddProduct}>
-                <Text style={styles.actionButtonText}>Add Product</Text>
+                onPress={handleAddProductItem}>
+                <Text style={styles.actionButtonText}>Save</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.actionButton, styles.cancelButton]}
@@ -274,38 +292,34 @@ export default function ProductsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 16,
     backgroundColor: Colors.light.background,
-    paddingHorizontal: 16,
-    paddingTop: 16,
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: Colors.light.text,
   },
   addButton: {
     backgroundColor: Colors.light.primary,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: 10,
     borderRadius: 4,
     marginBottom: 16,
   },
   addButtonText: {
     color: Colors.light.background,
-    fontWeight: 'bold',
     textAlign: 'center',
+    fontWeight: 'bold',
   },
   card: {
-    backgroundColor: Colors.light.background,
-    borderRadius: 8,
+    backgroundColor: '#fff',
     padding: 16,
+    borderRadius: 8,
     marginBottom: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: 8,
+    elevation: 4,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -315,28 +329,16 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: Colors.light.text,
   },
-  cardCategory: {
+  cardEmail: {
     fontSize: 14,
-    color: Colors.light.text,
-  },
-  cardPrice: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Colors.light.primary,
+    color: '#888',
   },
   cardContent: {
     marginTop: 8,
   },
   cardLabel: {
-    fontSize: 14,
     fontWeight: 'bold',
-    color: Colors.light.text,
-  },
-  cardValue: {
-    fontSize: 14,
-    color: Colors.light.text,
     marginBottom: 4,
   },
   cardActions: {
@@ -344,21 +346,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 12,
   },
+  cardValue: {
+    fontSize: 14,
+    marginBottom: 8,
+  },
   button: {
     backgroundColor: Colors.light.primary,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 4,
   },
-  buttonText: {
-    color: Colors.light.background,
-    fontWeight: 'bold',
-  },
   deleteButton: {
     backgroundColor: Colors.light.danger,
   },
-  deleteButtonText: {
+  buttonText: {
     color: Colors.light.background,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   modalOverlay: {
     flex: 1,
@@ -367,47 +371,50 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContainer: {
-    backgroundColor: Colors.light.background,
+    width: 300,
+    backgroundColor: '#fff',
     padding: 20,
     borderRadius: 8,
-    width: '80%',
-    maxWidth: 400,
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: Colors.light.text,
+    textAlign: 'center',
   },
   input: {
     height: 40,
-    borderColor: Colors.light.tertiary,
+    borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 12,
+    borderRadius: 4,
+    marginBottom: 16,
     paddingHorizontal: 8,
   },
   modalActions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 16,
   },
   actionButton: {
     flex: 1,
     paddingVertical: 8,
+    borderRadius: 4,
     marginHorizontal: 4,
-    borderRadius: 8,
   },
   updateButton: {
     backgroundColor: Colors.light.primary,
   },
   cancelButton: {
-    backgroundColor: Colors.light.danger,
+    backgroundColor: '#ccc',
   },
   actionButtonText: {
-    textAlign: 'center',
-    color: Colors.light.background,
+    color: '#fff',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
-
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#333',
+  },
 });
