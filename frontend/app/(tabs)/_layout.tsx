@@ -90,7 +90,19 @@ export default function TabLayout() {
           tabBarStyle: styles.tabBarStyle,
         }}
       />
+      {/* Categories Tab */}
+      <Tabs.Screen
+        name="categories"
+        options={{
+          title: 'Categories',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={30} name="categories" color={color} />
+          ),
+          tabBarStyle: styles.tabBarStyle,
+        }}
+      />
     </Tabs>
+
   );
 }
 
