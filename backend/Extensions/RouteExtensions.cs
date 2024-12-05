@@ -20,12 +20,12 @@ namespace BackendAPI.Extensions
             {
                 try
                 {
-                    await dbService.SaveItemAsync(newItem);  // Use SaveItemAsync instead of InsertItemAsync
-                    return Results.Created(endpoint, newItem); // 201 Created response
+                    await dbService.SaveItemAsync(newItem);
+                    return Results.Created(endpoint, newItem);
                 }
                 catch (Exception ex)
                 {
-                    return Results.Problem(detail: ex.Message, statusCode: 500); // Correct usage of Problem method
+                    return Results.Problem(detail: ex.Message, statusCode: 500);
                 }
             });
 
@@ -39,7 +39,7 @@ namespace BackendAPI.Extensions
                 }
                 catch (Exception ex)
                 {
-                    return Results.Problem(detail: ex.Message, statusCode: 500); // Correct usage of Problem method
+                    return Results.Problem(detail: ex.Message, statusCode: 500);
                 }
             });
 
@@ -53,7 +53,7 @@ namespace BackendAPI.Extensions
                 }
                 catch (Exception ex)
                 {
-                    return Results.Problem(detail: ex.Message, statusCode: 500); // Correct usage of Problem method
+                    return Results.Problem(detail: ex.Message, statusCode: 500);
                 }
             });
         }
