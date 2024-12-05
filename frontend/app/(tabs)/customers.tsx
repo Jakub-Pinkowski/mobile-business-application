@@ -101,9 +101,9 @@ export default function CustomersScreen() {
       // Web environment
       const confirmation = window.confirm('Are you sure you want to delete this customer?');
       if (confirmation) {
-        setCustomersData(prevCustomers => prevCustomers.filter(customer => customer.id !== customerId));
+        deleteCustomerFromBackend(customerId); // Delete the customer from the backend
       } else {
-        console.log("Delete cancelled");
+        console.log('Delete cancelled');
       }
     } else {
       // For mobile platforms (iOS/Android), use the React Native Alert
@@ -114,13 +114,39 @@ export default function CustomersScreen() {
         {
           text: 'Delete',
           onPress: () => {
-            setCustomersData(prevCustomers => prevCustomers.filter(customer => customer.id !== customerId));
+            deleteCustomerFromBackend(customerId); // Delete the customer from the backend
           },
           style: 'destructive',
         },
       ]);
     }
   };
+
+  // Function to delete customer from the backend and update UI
+  const deleteCustomerFromBackend = async (customerId: number) => {
+    try {
+      // Optimistic UI update: Remove the customer immediately from the local state
+      setCustomersData(prevCustomers => prevCustomers.filter(customer => customer.id !== customerId));
+
+      const response = await axios.delete(`http://localhost:5094/customers/${customerId}`);
+      if (response.status === 200) {
+        // After successfully deleting the customer from the backend, refetch the customer list
+        fetchCustomers();  // Refetch the updated customer data
+        Alert.alert('Success', 'Customer deleted successfully');
+      } else {
+        // If the response status is not 200, revert the optimistic update and show an error
+        fetchCustomers();  // Refetch the customer list to sync with backend data
+        Alert.alert('Error', 'Failed to delete the customer');
+      }
+    } catch (error) {
+      console.error('Error deleting customer:', error);
+      // In case of error, revert the optimistic update and show an error
+      fetchCustomers();  // Refetch the customer list to sync with backend data
+      Alert.alert('Error', 'Failed to delete the customer');
+    }
+  };
+
+
 
 
   return (
