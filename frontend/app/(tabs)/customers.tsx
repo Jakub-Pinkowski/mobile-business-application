@@ -80,7 +80,6 @@ export default function CustomersScreen() {
     }
   };
 
-
   // Handle Add Customer
   const handleAddCustomer = async () => {
     if (!newCustomer.name || !newCustomer.email || !newCustomer.phoneNumber || !newCustomer.addressId) {
@@ -163,8 +162,6 @@ export default function CustomersScreen() {
   };
 
 
-
-
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Customers</Text>
@@ -211,7 +208,6 @@ export default function CustomersScreen() {
         </View>
       ))}
 
-      {/* Modal for editing a customer */}
       {/* Modal for editing a customer */}
       <Modal visible={isModalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalOverlay}>
@@ -321,7 +317,7 @@ export default function CustomersScreen() {
           </View>
         </View>
       </Modal>
-
+      
     </View>
   );
 }
