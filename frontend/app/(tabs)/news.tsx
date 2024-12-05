@@ -202,9 +202,10 @@ export default function NewsScreen() {
             {/* Description Field */}
             <Text style={styles.label}>Description</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { height: 100 }]}
               value={editNewsItem?.description || ''}
               onChangeText={text => setEditNewsItem(prev => ({ ...prev!, description: text }))}
+              multiline={true}
             />
 
             <View style={styles.modalActions}>
@@ -238,11 +239,11 @@ export default function NewsScreen() {
             />
 
             {/* Description Field */}
-            <Text style={styles.label}>Description</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { height: 100 }]}
               value={newNewsItem.description}
               onChangeText={text => setNewNewsItem(prev => ({ ...prev, description: text }))}
+              multiline={true}
             />
 
             <View style={styles.modalActions}>
@@ -364,6 +365,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginBottom: 16,
     paddingHorizontal: 8,
+    textAlignVertical: 'top',  // Ensures the text starts from the top of the input field
   },
   modalActions: {
     flexDirection: 'row',
