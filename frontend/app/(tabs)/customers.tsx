@@ -51,16 +51,35 @@ export default function CustomersScreen() {
   };
 
   // Handle Update Customer
-  const handleUpdateCustomer = () => {
+  const handleUpdateCustomer = async () => {
     if (editCustomer) {
-      const updatedCustomers = customersData.map(customer =>
-        customer.id === editCustomer.id ? editCustomer : customer
-      );
-      setCustomersData(updatedCustomers);
-      setIsModalVisible(false);
-      setEditCustomer(null);
+      const updatedCustomer = {
+        ...editCustomer,
+        // Ensure we update the registrationDate as it's a fixed value
+        registrationDate: new Date().toISOString(),
+      };
+
+      try {
+        const response = await axios.put(`http://localhost:5094/customers/${editCustomer.id}`, updatedCustomer);
+        if (response.status === 200) {
+          // Optimistically update the UI (Update the customer in the state)
+          const updatedCustomers = customersData.map(customer =>
+            customer.id === editCustomer.id ? updatedCustomer : customer
+          );
+          setCustomersData(updatedCustomers);
+          setIsModalVisible(false); 
+          setEditCustomer(null);  
+          Alert.alert('Success', 'Customer updated successfully');
+        } else {
+          Alert.alert('Error', 'Failed to update the customer');
+        }
+      } catch (error) {
+        console.error('Error updating customer:', error);
+        Alert.alert('Error', 'Failed to update the customer');
+      }
     }
   };
+
 
   // Handle Add Customer
   const handleAddCustomer = async () => {
@@ -130,18 +149,15 @@ export default function CustomersScreen() {
 
       const response = await axios.delete(`http://localhost:5094/customers/${customerId}`);
       if (response.status === 200) {
-        // After successfully deleting the customer from the backend, refetch the customer list
-        fetchCustomers();  // Refetch the updated customer data
+        fetchCustomers();
         Alert.alert('Success', 'Customer deleted successfully');
       } else {
-        // If the response status is not 200, revert the optimistic update and show an error
-        fetchCustomers();  // Refetch the customer list to sync with backend data
+        fetchCustomers();
         Alert.alert('Error', 'Failed to delete the customer');
       }
     } catch (error) {
       console.error('Error deleting customer:', error);
-      // In case of error, revert the optimistic update and show an error
-      fetchCustomers();  // Refetch the customer list to sync with backend data
+      fetchCustomers();
       Alert.alert('Error', 'Failed to delete the customer');
     }
   };
