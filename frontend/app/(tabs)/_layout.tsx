@@ -78,6 +78,17 @@ export default function TabLayout() {
           tabBarStyle: styles.tabBarStyle,
         }}
       />
+      {/* Adresses Tab */}
+      <Tabs.Screen
+        name="addresses"
+        options={{
+          title: 'Addresses',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={30} name="address" color={color} />
+          ),
+          tabBarStyle: styles.tabBarStyle,
+        }}
+      />
     </Tabs>
   );
 }
