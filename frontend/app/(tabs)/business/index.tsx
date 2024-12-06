@@ -10,28 +10,45 @@ export default function BusinessPage() {
       <Text style={styles.subheader}>View the business views below:</Text>
 
       <View style={styles.buttonContainer}>
-        <Link href="/business/product-reviews" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Product reviews</Text>
-        </Link>
-        <Text style={styles.description}>
-          Explore customer reviews for various products. See how your products are rated and gain insights into customer satisfaction.
-        </Text>
+        {/* Product Reviews Link and Description */}
+        <View style={styles.buttonBlock}>
+          <Link href="/business/product-reviews" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+            <Text style={styles.buttonText}>Product reviews</Text>
+          </Link>
+          <Text style={styles.description}>
+            Explore customer reviews for various products. See how your products are rated and gain insights into customer satisfaction.
+          </Text>
+          <Text style={styles.description}>
+            Foreign keys present, 4 tables used
+          </Text>
+        </View>
 
-        <Link href="/business/customer-invoices" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Customer invoices</Text>
-        </Link>
-        <Text style={styles.description}>
-          View detailed invoices for your customers, including purchase history, total amounts, and invoice-specific data.
-        </Text>
+        {/* Customer Invoices Link and Description */}
+        <View style={styles.buttonBlock}>
+          <Link href="/business/customer-invoices" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+            <Text style={styles.buttonText}>Customer invoices</Text>
+          </Link>
+          <Text style={styles.description}>
+            View detailed invoices for your customers, including purchase history, total amounts, and invoice-specific data.
+          </Text>
+          <Text style={styles.description}>
+            Foreign keys present, 5 tables used
+          </Text>
+        </View>
 
-        <Link href="/business/supplier-products" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Supplier products</Text>
-        </Link>
-        <Text style={styles.description}>
-          Discover the products provided by your suppliers, including pricing, categories, and supplier contact information.
-        </Text>
+        {/* Supplier Products Link and Description */}
+        <View style={styles.buttonBlock}>
+          <Link href="/business/supplier-products" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+            <Text style={styles.buttonText}>Supplier products</Text>
+          </Link>
+          <Text style={styles.description}>
+            Discover the products provided by your suppliers, including pricing, categories, and supplier contact information.
+          </Text>
+          <Text style={styles.description}>
+            Foreign keys present, 3 tables used
+          </Text>
+        </View>
       </View>
-
     </View>
   );
 }
@@ -39,7 +56,7 @@ export default function BusinessPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: Colors.light.background,
     padding: 16,
@@ -57,7 +74,11 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '100%',
-    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonBlock: {
+    width: '100%',
+    marginBottom: 40,  // Added margin to separate each block
     alignItems: 'center',
   },
   button: {
@@ -79,7 +100,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     color: '#777',
-    marginBottom: 24,
+    marginBottom: 4,  // Reduced margin to bring descriptions closer together
     textAlign: 'center',
   },
 });
