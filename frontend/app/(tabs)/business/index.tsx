@@ -10,18 +10,18 @@ export default function BusinessPage() {
       <Text style={styles.subheader}>View the business views below:</Text>
 
       <View style={styles.buttonContainer}>
-        <Link href="/business/business_1" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Tables</Text>
+        <Link href="/business/product-reviews" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Product reviews</Text>
         </Link>
         <Text style={styles.description}>Lorep Ipsum</Text>
 
-        <Link href="/business/business_1" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Tables</Text>
+        <Link href="/business/customer-invoices" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Customer invoices</Text>
         </Link>
         <Text style={styles.description}>Lorep Ipsum</Text>
 
-        <Link href="/business/business_1" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Tables</Text>
+        <Link href="/business/supplier-products" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Supplier products</Text>
         </Link>
         <Text style={styles.description}>Lorep Ipsum</Text>
 
