@@ -10,8 +10,16 @@ export default function HomePage() {
       <Text style={styles.subheader}>Choose a section to explore:</Text>
 
       <View style={styles.buttonContainer}>
-        {/* Buttons for navigation */}
-        {/* TODO: Add just main tables and business views */}
+        <Link href="/tables" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Tables</Text>
+        </Link>
+        <Text style={styles.description}>View, add, edit and delete entier from all the database tables</Text>
+
+        <Link href="/business" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Business Views</Text>
+        </Link>
+        <Text style={styles.description}>View business views prepared by mixing different tables together</Text>
+
       </View>
     </View>
   );
@@ -55,6 +63,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  description: {
+    fontSize: 14,
+    color: '#777',
+    marginBottom: 24,
     textAlign: 'center',
   },
 });
