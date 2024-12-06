@@ -71,6 +71,23 @@ namespace BackendAPI.Extensions
             app.MapCrudOperations<Product>("/products");
             app.MapCrudOperations<Supplier>("/suppliers");
 
+            app.MapCrudOperations<Tag>("/tags");
+            app.MapCrudOperations<ProductTag>("/producttags");
+
+            // Add a route for resetting the database
+            app.MapGet("/reset-database", async (DatabaseService dbService) =>
+            {
+                try
+                {
+                    await dbService.ResetDatabaseAsync();
+                    return Results.Ok("Database has been reset successfully.");
+                }
+                catch (Exception ex)
+                {
+                    return Results.Problem(detail: ex.Message, statusCode: 500);
+                }
+            });
+
             return app;
         }
     }
