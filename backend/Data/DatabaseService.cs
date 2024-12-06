@@ -87,6 +87,7 @@ namespace BackendAPI.Services
             await _database.DropTableAsync<Supplier>();
             await _database.DropTableAsync<Tag>();
             await _database.DropTableAsync<ProductTag>();
+            await _database.DropTableAsync<ProductSupplier>();
         }
 
         // Create tables for all models
@@ -104,6 +105,7 @@ namespace BackendAPI.Services
             await _database.CreateTableAsync<Supplier>();
             await _database.CreateTableAsync<Tag>();
             await _database.CreateTableAsync<ProductTag>();
+            await _database.CreateTableAsync<ProductSupplier>();
         }
 
         public async Task PopulateTablesWithDummyDataAsync()
@@ -242,7 +244,7 @@ namespace BackendAPI.Services
             foreach (var review in reviews)
             {
                 await SaveItemAsync(review);
-            }       
+            }
 
             // Populate Tag and ProductTag (many-to-many relationship)
             var tags = new List<Tag>
@@ -275,6 +277,26 @@ namespace BackendAPI.Services
             foreach (var productTag in productTags)
             {
                 await SaveItemAsync(productTag);
+            }
+            // Populate ProductSupplier (many-to-many relationships between Products and Suppliers)
+            var productSuppliers = new List<ProductSupplier>
+            {
+                new ProductSupplier { ProductId = 1, SupplierId = 1 }, // Mountain Bike supplied by Tech Supplies Co.
+                new ProductSupplier { ProductId = 2, SupplierId = 2 }, // Road Bike supplied by Fashion World Ltd.
+                new ProductSupplier { ProductId = 3, SupplierId = 3 }, // Cycling Cap supplied by Sporting Goods Inc.
+                new ProductSupplier { ProductId = 4, SupplierId = 4 }, // Sports Cap supplied by Home Comforts Inc.
+                new ProductSupplier { ProductId = 5, SupplierId = 5 }, // Backpack 20L supplied by Outdoor Adventure Ltd.
+                new ProductSupplier { ProductId = 6, SupplierId = 1 }, // Backpack 40L also supplied by Tech Supplies Co.
+                new ProductSupplier { ProductId = 7, SupplierId = 2 }, // Running Shoes supplied by Fashion World Ltd.
+                new ProductSupplier { ProductId = 8, SupplierId = 3 }, // Trekking Boots supplied by Sporting Goods Inc.
+                new ProductSupplier { ProductId = 1, SupplierId = 3 }, // Mountain Bike also supplied by Sporting Goods Inc.
+                new ProductSupplier { ProductId = 5, SupplierId = 1 }  // Backpack 20L also supplied by Tech Supplies Co.
+            };
+
+            // Save the product-supplier relationships
+            foreach (var productSupplier in productSuppliers)
+            {
+                await SaveItemAsync(productSupplier);
             }
 
         }

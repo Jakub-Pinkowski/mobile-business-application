@@ -73,6 +73,7 @@ namespace BackendAPI.Extensions
 
             app.MapCrudOperations<Tag>("/tags");
             app.MapCrudOperations<ProductTag>("/producttags");
+            app.MapCrudOperations<ProductSupplier>("/productsupplier");
 
             // Add a route for resetting the database
             app.MapGet("/reset-database", async (DatabaseService dbService) =>
