@@ -21,12 +21,12 @@ export default function TabLayout() {
         tabBarStyle: Platform.select({
           ios: {
             position: 'absolute',
-            backgroundColor: Colors[colorScheme ?? 'light'].background, // Dynamic background
-            borderTopWidth: 0, // Removing top border to get a cleaner design on iOS
+            backgroundColor: Colors[colorScheme ?? 'light'].background,
+            borderTopWidth: 0,
           },
           android: {
             backgroundColor: Colors[colorScheme ?? 'light'].background,
-            elevation: 10, // Elevation for Android to give the tab bar a shadow effect
+            elevation: 10,
           },
           default: {
             backgroundColor: Colors.light.background,
@@ -42,17 +42,28 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <IconSymbol size={30} name="house.fill" color={color} />
           ),
-          tabBarStyle: styles.tabBarStyle,
+        }}
+      />
+      {/* Tables Tab */}
+      <Tabs.Screen
+        name="tables"
+        options={{
+          title: 'Tables',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={30} name="table" color={color} />
+          ),
+        }}
+      />
+      {/* Business Tab */}
+      <Tabs.Screen
+        name="business"
+        options={{
+          title: 'Business',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={30} name="briefcase" color={color} />
+          ),
         }}
       />
     </Tabs>
-
   );
 }
-
-const styles = StyleSheet.create({
-  tabBarStyle: {
-    backgroundColor: Colors.light.tabBackground,
-    borderTopWidth: 0,
-  },
-});
