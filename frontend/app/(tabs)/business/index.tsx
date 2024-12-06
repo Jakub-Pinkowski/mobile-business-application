@@ -18,7 +18,7 @@ export default function BusinessPage() {
           <Text style={styles.description}>
             Explore customer reviews and ratings for products.
           </Text>
-          <Text style={styles.description}>
+          <Text style={styles.metaDescription}>
             4 tables used, foreign keys present
           </Text>
         </View>
@@ -31,7 +31,7 @@ export default function BusinessPage() {
           <Text style={styles.description}>
             View detailed customer invoices, including history and totals.
           </Text>
-          <Text style={styles.description}>
+          <Text style={styles.metaDescription}>
             5 tables used, foreign keys present
           </Text>
         </View>
@@ -44,7 +44,7 @@ export default function BusinessPage() {
           <Text style={styles.description}>
             Discover products provided by suppliers, including details.
           </Text>
-          <Text style={styles.description}>
+          <Text style={styles.metaDescription}>
             3 tables used, foreign keys present
           </Text>
         </View>
@@ -57,7 +57,7 @@ export default function BusinessPage() {
           <Text style={styles.description}>
             View products with their tags, demonstrating many-to-many relations.
           </Text>
-          <Text style={styles.description}>
+          <Text style={styles.metaDescription}>
             many-to-many relationships between products and tags, 3 tables used
           </Text>
         </View>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   buttonBlock: {
     width: '100%',
-    marginBottom: 20,  // Added margin to separate each block
+    marginBottom: 20,
     alignItems: 'center',
   },
   button: {
@@ -114,6 +114,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#777',
     marginBottom: 4,
+    textAlign: 'center',
+  },
+  metaDescription: {
+    fontSize: 12,
+    color: '#555',
+    fontStyle: 'italic', 
+    fontWeight: '700',
+    marginBottom: 6,
     textAlign: 'center',
   },
 });
