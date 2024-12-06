@@ -3,11 +3,29 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 
-export default function TablesPage() {
+export default function BusinessPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>I am an index business view</Text>
-      <Text style={styles.subheader}>Choose a section to explore:</Text>
+      <Text style={styles.header}>Business Views</Text>
+      <Text style={styles.subheader}>View the business views below:</Text>
+
+      <View style={styles.buttonContainer}>
+        <Link href="/business/business_1" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Tables</Text>
+        </Link>
+        <Text style={styles.description}>Lorep Ipsum</Text>
+
+        <Link href="/business/business_1" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Tables</Text>
+        </Link>
+        <Text style={styles.description}>Lorep Ipsum</Text>
+
+        <Link href="/business/business_1" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Tables</Text>
+        </Link>
+        <Text style={styles.description}>Lorep Ipsum</Text>
+
+      </View>
     </View>
   );
 }
@@ -50,6 +68,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  description: {
+    fontSize: 14,
+    color: '#777',
+    marginBottom: 24,
     textAlign: 'center',
   },
 });
