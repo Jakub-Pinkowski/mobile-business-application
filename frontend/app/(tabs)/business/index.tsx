@@ -61,6 +61,19 @@ export default function BusinessPage() {
             many-to-many relationships between products and tags, 3 tables used
           </Text>
         </View>
+        
+        {/* Product-Supplier Summary Link and Description */}
+        <View style={styles.buttonBlock}>
+          <Link href="/business/product-supplier" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+            <Text style={styles.buttonText}>Product Suppliers</Text>
+          </Link>
+          <Text style={styles.description}>
+            Explore products with their associated suppliers, showcasing their relationships.
+          </Text>
+          <Text style={styles.metaDescription}>
+            many-to-many relationships between products and suppliers, 3 tables used
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -119,7 +132,7 @@ const styles = StyleSheet.create({
   metaDescription: {
     fontSize: 12,
     color: '#555',
-    fontStyle: 'italic', 
+    fontStyle: 'italic',
     fontWeight: '700',
     marginBottom: 6,
     textAlign: 'center',
