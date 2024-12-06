@@ -29,7 +29,7 @@ export default function TabLayout() {
             elevation: 10,
           },
           default: {
-            backgroundColor: Colors.light.background,
+            backgroundColor: Colors.light.tabBackground,
           },
         }),
       }}
