@@ -16,10 +16,10 @@ export default function BusinessPage() {
             <Text style={styles.buttonText}>Product reviews</Text>
           </Link>
           <Text style={styles.description}>
-            Explore customer reviews for various products. See how your products are rated and gain insights into customer satisfaction.
+            Explore customer reviews and ratings for products.
           </Text>
           <Text style={styles.description}>
-            Foreign keys present, 4 tables used
+            4 tables used, foreign keys present
           </Text>
         </View>
 
@@ -29,10 +29,10 @@ export default function BusinessPage() {
             <Text style={styles.buttonText}>Customer invoices</Text>
           </Link>
           <Text style={styles.description}>
-            View detailed invoices for your customers, including purchase history, total amounts, and invoice-specific data.
+            View detailed customer invoices, including history and totals.
           </Text>
           <Text style={styles.description}>
-            Foreign keys present, 5 tables used
+            5 tables used, foreign keys present
           </Text>
         </View>
 
@@ -42,10 +42,23 @@ export default function BusinessPage() {
             <Text style={styles.buttonText}>Supplier products</Text>
           </Link>
           <Text style={styles.description}>
-            Discover the products provided by your suppliers, including pricing, categories, and supplier contact information.
+            Discover products provided by suppliers, including details.
           </Text>
           <Text style={styles.description}>
-            Foreign keys present, 3 tables used
+            3 tables used, foreign keys present
+          </Text>
+        </View>
+
+        {/* Product Tag Summary Link and Description */}
+        <View style={styles.buttonBlock}>
+          <Link href="/business/product-tag" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+            <Text style={styles.buttonText}>Product Tags</Text>
+          </Link>
+          <Text style={styles.description}>
+            View products with their tags, demonstrating many-to-many relations.
+          </Text>
+          <Text style={styles.description}>
+            many-to-many relationships between products and tags, 3 tables used
           </Text>
         </View>
       </View>
@@ -65,12 +78,12 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 20,
+    marginBottom: 8,
   },
   subheader: {
     fontSize: 18,
     color: '#777',
-    marginBottom: 40,
+    marginBottom: 10,
   },
   buttonContainer: {
     width: '100%',
@@ -78,13 +91,13 @@ const styles = StyleSheet.create({
   },
   buttonBlock: {
     width: '100%',
-    marginBottom: 40,  // Added margin to separate each block
+    marginBottom: 20,  // Added margin to separate each block
     alignItems: 'center',
   },
   button: {
     paddingVertical: 12,
     paddingHorizontal: 24,
-    marginBottom: 16,
+    marginBottom: 8,
     borderRadius: 8,
     width: '80%',
     alignItems: 'center',
@@ -100,7 +113,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     color: '#777',
-    marginBottom: 4,  // Reduced margin to bring descriptions closer together
+    marginBottom: 4,
     textAlign: 'center',
   },
 });
