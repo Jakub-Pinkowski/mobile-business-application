@@ -123,6 +123,17 @@ export default function TabLayout() {
           tabBarStyle: styles.tabBarStyle,
         }}
       />
+      {/* Invoice items Tab */}
+      <Tabs.Screen
+        name="invoiceitems"
+        options={{
+          title: 'Invoice Items',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={30} name="invoiceitems" color={color} />
+          ),
+          tabBarStyle: styles.tabBarStyle,
+        }}
+      />
     </Tabs>
 
   );
