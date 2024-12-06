@@ -13,19 +13,25 @@ export default function BusinessPage() {
         <Link href="/business/product-reviews" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
           <Text style={styles.buttonText}>Product reviews</Text>
         </Link>
-        <Text style={styles.description}>Lorep Ipsum</Text>
+        <Text style={styles.description}>
+          Explore customer reviews for various products. See how your products are rated and gain insights into customer satisfaction.
+        </Text>
 
         <Link href="/business/customer-invoices" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
           <Text style={styles.buttonText}>Customer invoices</Text>
         </Link>
-        <Text style={styles.description}>Lorep Ipsum</Text>
+        <Text style={styles.description}>
+          View detailed invoices for your customers, including purchase history, total amounts, and invoice-specific data.
+        </Text>
 
         <Link href="/business/supplier-products" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
           <Text style={styles.buttonText}>Supplier products</Text>
         </Link>
-        <Text style={styles.description}>Lorep Ipsum</Text>
-
+        <Text style={styles.description}>
+          Discover the products provided by your suppliers, including pricing, categories, and supplier contact information.
+        </Text>
       </View>
+
     </View>
   );
 }
