@@ -10,23 +10,31 @@ export default function HomePage() {
       <Text style={styles.subheader}>Choose a section to explore:</Text>
 
       <View style={styles.buttonContainer}>
-        {/* Success Button (Green) */}
+        {/* Buttons for navigation */}
         <Link href="/products" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
           <Text style={styles.buttonText}>Products</Text>
         </Link>
-        <Text style={styles.description}>Browse our wide range of products</Text>
-
-        {/* Danger Button (Red) */}
         <Link href="/news" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
           <Text style={styles.buttonText}>News</Text>
         </Link>
-        <Text style={styles.description}>Stay updated with the latest news</Text>
-
-        {/* Another Success Button (Green) */}
         <Link href="/customers" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
           <Text style={styles.buttonText}>Customers</Text>
         </Link>
-        <Text style={styles.description}>View customers data</Text>
+        <Link href="/address" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Address</Text>
+        </Link>
+        <Link href="/categories" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Categories</Text>
+        </Link>
+        <Link href="/invoices" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Invoices</Text>
+        </Link>
+        <Link href="/suppliers" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Suppliers</Text>
+        </Link>
+        <Link href="/invoiceitems" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Invoice Items</Text>
+        </Link>
       </View>
     </View>
   );
@@ -70,12 +78,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  description: {
-    fontSize: 14,
-    color: '#777',
-    marginBottom: 24,
     textAlign: 'center',
   },
 });
