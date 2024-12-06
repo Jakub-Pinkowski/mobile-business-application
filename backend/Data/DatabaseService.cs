@@ -230,6 +230,20 @@ namespace BackendAPI.Services
                 await SaveItemAsync(newsItem);
             }
 
+            // Populate Reviews (linked to products and customers)
+            var reviews = new List<Review>
+            {
+                new Review { Content = "Great bike for mountain trails!", Rating = 5, ProductId = 1, CustomerId = 1 },
+                new Review { Content = "Nice road bike, perfect for daily commutes.", Rating = 4, ProductId = 2, CustomerId = 2 },
+                new Review { Content = "Very comfortable cap for cycling.", Rating = 4, ProductId = 3, CustomerId = 3 },
+                new Review { Content = "Stylish and affordable sports cap.", Rating = 3, ProductId = 4, CustomerId = 4 },
+                new Review { Content = "Perfect for short hiking trips.", Rating = 5, ProductId = 5, CustomerId = 5 }
+            };
+            foreach (var review in reviews)
+            {
+                await SaveItemAsync(review);
+            }       
+
             // Populate Tag and ProductTag (many-to-many relationship)
             var tags = new List<Tag>
             {
