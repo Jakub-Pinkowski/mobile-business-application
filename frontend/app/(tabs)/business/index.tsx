@@ -3,16 +3,11 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 
-export default function HomePage() {
+export default function TablesPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Welcome to the App</Text>
+      <Text style={styles.header}>I am an index business view</Text>
       <Text style={styles.subheader}>Choose a section to explore:</Text>
-
-      <View style={styles.buttonContainer}>
-        {/* Buttons for navigation */}
-        {/* TODO: Add just main tables and business views */}
-      </View>
     </View>
   );
 }

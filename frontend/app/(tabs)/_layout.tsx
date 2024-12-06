@@ -34,7 +34,6 @@ export default function TabLayout() {
         }),
       }}
     >
-      {/* TODO: Update all the tabs starting from */}
       {/* Home Tab */}
       <Tabs.Screen
         name="index"
@@ -42,94 +41,6 @@ export default function TabLayout() {
           title: 'Home',
           tabBarIcon: ({ color }) => (
             <IconSymbol size={30} name="house.fill" color={color} />
-          ),
-          tabBarStyle: styles.tabBarStyle,
-        }}
-      />
-      {/* Products Tab */}
-      <Tabs.Screen
-        name="products"
-        options={{
-          title: 'Products',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={30} name="products" color={color} />
-          ),
-          tabBarStyle: styles.tabBarStyle,
-        }}
-      />
-      {/* News Tab */}
-      <Tabs.Screen
-        name="news"
-        options={{
-          title: 'News',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={30} name="notification" color={color} />
-          ),
-          tabBarStyle: styles.tabBarStyle,
-        }}
-      />
-      {/* Customers Tab */}
-      <Tabs.Screen
-        name="customers"
-        options={{
-          title: 'Customers',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={30} name="customer" color={color} />
-          ),
-          tabBarStyle: styles.tabBarStyle,
-        }}
-      />
-      {/* Adresses Tab */}
-      <Tabs.Screen
-        name="address"
-        options={{
-          title: 'Address',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={30} name="address" color={color} />
-          ),
-          tabBarStyle: styles.tabBarStyle,
-        }}
-      />
-      {/* Categories Tab */}
-      <Tabs.Screen
-        name="categories"
-        options={{
-          title: 'Categories',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={30} name="categories" color={color} />
-          ),
-          tabBarStyle: styles.tabBarStyle,
-        }}
-      />
-      {/* Invoices Tab */}
-      <Tabs.Screen
-        name="invoices"
-        options={{
-          title: 'Invoices',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={30} name="invoices" color={color} />
-          ),
-          tabBarStyle: styles.tabBarStyle,
-        }}
-      />
-      {/* Suppliers Tab */}
-      <Tabs.Screen
-        name="suppliers"
-        options={{
-          title: 'Suppliers',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={30} name="suppliers" color={color} />
-          ),
-          tabBarStyle: styles.tabBarStyle,
-        }}
-      />
-      {/* Invoice items Tab */}
-      <Tabs.Screen
-        name="invoiceitems"
-        options={{
-          title: 'Invoice Items',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={30} name="invoiceitems" color={color} />
           ),
           tabBarStyle: styles.tabBarStyle,
         }}
