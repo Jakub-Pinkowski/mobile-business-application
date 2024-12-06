@@ -50,7 +50,7 @@ export default function TabLayout() {
         options={{
           title: 'Tables',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={30} name="table" color={color} />
+            <IconSymbol size={30} name="products" color={color} />
           ),
         }}
       />
@@ -60,7 +60,7 @@ export default function TabLayout() {
         options={{
           title: 'Business',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={30} name="briefcase" color={color} />
+            <IconSymbol size={30} name="notification" color={color} />
           ),
         }}
       />
