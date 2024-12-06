@@ -323,8 +323,6 @@ namespace BackendAPI.Services
                 await SaveItemAsync(product);
             }
 
-
-
             // Populate Review (Assuming products and customers already exist)
             var reviews = new List<Review>
             {

@@ -67,7 +67,7 @@ namespace BackendAPI.Extensions
             app.MapCrudOperations<InvoiceItem>("/invoiceitems");
             app.MapCrudOperations<Invoice>("/invoices");
             app.MapCrudOperations<News>("/news");
-            app.MapCrudOperations<Review>("/productreviews");
+            app.MapCrudOperations<Review>("/reviews");
             app.MapCrudOperations<Product>("/products");
             app.MapCrudOperations<Supplier>("/suppliers");
 
