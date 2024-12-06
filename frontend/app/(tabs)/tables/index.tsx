@@ -6,8 +6,8 @@ import { Colors } from '@/constants/Colors';
 export default function TablesPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Welcome to the App</Text>
-      <Text style={styles.subheader}>Choose a section to explore:</Text>
+      <Text style={styles.header}>Tables</Text>
+      <Text style={styles.subheader}>View all the tables below</Text>
 
       <View style={styles.buttonContainer}>
         {/* Buttons for navigation */}
