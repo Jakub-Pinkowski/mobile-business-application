@@ -13,7 +13,8 @@ interface Invoice {
 export default function InvoiceScreen() {
     const [invoices, setInvoices] = useState<Invoice[]>([]);
     const [expanded, setExpanded] = useState<string | null>(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+    const [isAddModalVisible, setIsAddModalVisible] = useState(false);
     const [editInvoice, setEditInvoice] = useState<Invoice | null>(null);
     const [newInvoice, setNewInvoice] = useState<Invoice>({
         date: new Date().toISOString(),
@@ -42,7 +43,7 @@ export default function InvoiceScreen() {
     // Handle Edit Invoice
     const handleEditInvoice = (invoice: Invoice) => {
         setEditInvoice(invoice);
-        setIsModalVisible(true);
+        setIsEditModalVisible(true);
     };
 
     // Handle Update Invoice
@@ -55,7 +56,7 @@ export default function InvoiceScreen() {
                         inv.id === editInvoice.id ? response.data : inv
                     );
                     setInvoices(updatedInvoices);
-                    setIsModalVisible(false);
+                    setIsEditModalVisible(false);
                     setEditInvoice(null);
                     Alert.alert('Success', 'Invoice updated successfully');
                 } else {
@@ -78,7 +79,7 @@ export default function InvoiceScreen() {
         try {
             const response = await axios.post('http://localhost:5094/invoices', newInvoice);
             setInvoices(prevInvoices => [...prevInvoices, response.data]);
-            setIsModalVisible(false);
+            setIsAddModalVisible(false);
             setNewInvoice({
                 date: new Date().toISOString(),
                 totalAmount: 0,
@@ -140,11 +141,11 @@ export default function InvoiceScreen() {
         <View style={styles.container}>
             <Text style={styles.header}>Invoices</Text>
 
-            <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
+            <TouchableOpacity style={styles.addButton} onPress={() => setIsAddModalVisible(true)}>
                 <Text style={styles.addButtonText}>Add New Invoice</Text>
             </TouchableOpacity>
 
-            {invoices.map((invoice) => (
+            {invoices.map(invoice => (
                 <View key={invoice.id} style={styles.card}>
                     <TouchableOpacity
                         onPress={() => handlePress(invoice.id?.toString() || '')}
@@ -159,9 +160,7 @@ export default function InvoiceScreen() {
                             <Text style={styles.cardLabel}>Customer ID: {invoice.customerId}</Text>
 
                             <View style={styles.cardActions}>
-                                <TouchableOpacity
-                                    style={styles.button}
-                                    onPress={() => handleEditInvoice(invoice)}>
+                                <TouchableOpacity style={styles.button} onPress={() => handleEditInvoice(invoice)}>
                                     <Text style={styles.buttonText}>Edit</Text>
                                 </TouchableOpacity>
 
@@ -177,12 +176,11 @@ export default function InvoiceScreen() {
             ))}
 
             {/* Modal for editing an invoice */}
-            <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+            <Modal visible={isEditModalVisible} animationType="slide" transparent={true}>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContainer}>
                         <Text style={styles.modalTitle}>Edit Invoice</Text>
 
-                        {/* Total Amount Field */}
                         <Text style={styles.label}>Total Amount</Text>
                         <TextInput
                             style={styles.input}
@@ -191,7 +189,6 @@ export default function InvoiceScreen() {
                             keyboardType="numeric"
                         />
 
-                        {/* Customer ID Field */}
                         <Text style={styles.label}>Customer ID</Text>
                         <TextInput
                             style={styles.input}
@@ -208,7 +205,7 @@ export default function InvoiceScreen() {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.actionButton, styles.cancelButton]}
-                                onPress={() => setIsModalVisible(false)}>
+                                onPress={() => setIsEditModalVisible(false)}>
                                 <Text style={styles.actionButtonText}>Cancel</Text>
                             </TouchableOpacity>
                         </View>
@@ -217,12 +214,11 @@ export default function InvoiceScreen() {
             </Modal>
 
             {/* Modal for adding a new invoice */}
-            <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+            <Modal visible={isAddModalVisible} animationType="slide" transparent={true}>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContainer}>
                         <Text style={styles.modalTitle}>Add New Invoice</Text>
 
-                        {/* Total Amount Field */}
                         <Text style={styles.label}>Total Amount</Text>
                         <TextInput
                             style={styles.input}
@@ -231,7 +227,6 @@ export default function InvoiceScreen() {
                             keyboardType="numeric"
                         />
 
-                        {/* Customer ID Field */}
                         <Text style={styles.label}>Customer ID</Text>
                         <TextInput
                             style={styles.input}
@@ -248,7 +243,7 @@ export default function InvoiceScreen() {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.actionButton, styles.cancelButton]}
-                                onPress={() => setIsModalVisible(false)}>
+                                onPress={() => setIsAddModalVisible(false)}>
                                 <Text style={styles.actionButtonText}>Cancel</Text>
                             </TouchableOpacity>
                         </View>
@@ -258,6 +253,7 @@ export default function InvoiceScreen() {
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
