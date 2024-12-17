@@ -1,47 +1,47 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
 import { Colors } from '@/constants/Colors';
+import { MaterialIcons } from '@expo/vector-icons';
+
+// Define allowed paths and icons
+type Table = {
+  name: string;
+  icon: keyof typeof MaterialIcons.glyphMap; // Ensures icon is from MaterialIcons
+  path: '/tables/products' | '/tables/news' | '/tables/customers' | '/tables/address' | '/tables/categories' | '/tables/invoices' | '/tables/suppliers' | '/tables/invoiceitems' | '/tables/reviews' | '/tables/productsuppliers';
+};
+
+const tables: Table[] = [
+  { name: 'Products', icon: 'shopping-cart', path: '/tables/products' },
+  { name: 'News', icon: 'article', path: '/tables/news' },
+  { name: 'Customers', icon: 'people', path: '/tables/customers' },
+  { name: 'Address', icon: 'location-on', path: '/tables/address' },
+  { name: 'Categories', icon: 'category', path: '/tables/categories' },
+  { name: 'Invoices', icon: 'receipt', path: '/tables/invoices' },
+  { name: 'Suppliers', icon: 'business', path: '/tables/suppliers' },
+  { name: 'Invoice Items', icon: 'inventory', path: '/tables/invoiceitems' },
+  { name: 'Reviews', icon: 'rate-review', path: '/tables/reviews' },
+  { name: 'Product Suppliers', icon: 'local-shipping', path: '/tables/productsuppliers' },
+];
 
 export default function TablesPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Tables</Text>
-      <Text style={styles.subheader}>View all the tables below</Text>
-
-      <View style={styles.buttonContainer}>
-        {/* Buttons for navigation */}
-        <Link href="/tables/products" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Products</Text>
-        </Link>
-        <Link href="/tables/news" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>News</Text>
-        </Link>
-        <Link href="/tables/customers" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Customers</Text>
-        </Link>
-        <Link href="/tables/address" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Address</Text>
-        </Link>
-        <Link href="/tables/categories" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Categories</Text>
-        </Link>
-        <Link href="/tables/invoices" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Invoices</Text>
-        </Link>
-        <Link href="/tables/suppliers" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Suppliers</Text>
-        </Link>
-        <Link href="/tables/invoiceitems" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Invoice Items</Text>
-        </Link>
-        <Link href="/tables/reviews" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Reviews</Text>
-        </Link>
-        <Link href="/tables/productsuppliers" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
-          <Text style={styles.buttonText}>Product Suppliers</Text>
-        </Link>
-      </View>
+      <Text style={styles.header}>Explore Tables</Text>
+      <FlatList
+        data={tables}
+        keyExtractor={(item) => item.name}
+        numColumns={2} // Two-column grid
+        columnWrapperStyle={styles.row}
+        renderItem={({ item }) => (
+          <Link href={item.path} asChild>
+            <TouchableOpacity style={styles.card}>
+              <MaterialIcons name={item.icon} size={32} color={Colors.light.primary} />
+              <Text style={styles.cardText}>{item.name}</Text>
+            </TouchableOpacity>
+          </Link>
+        )}
+      />
     </View>
   );
 }
@@ -49,41 +49,38 @@ export default function TablesPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: Colors.light.background,
-    padding: 16,
+    padding: 20,
+    justifyContent: 'center',
   },
   header: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
+    color: Colors.light.primary,
+    textAlign: 'center',
     marginBottom: 20,
   },
-  subheader: {
-    fontSize: 18,
-    color: '#777',
-    marginBottom: 40,
+  row: {
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
-  buttonContainer: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    marginBottom: 16,
-    borderRadius: 8,
-    width: '80%',
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    textAlign: 'center',
+    width: '47%',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
+  cardText: {
+    marginTop: 12,
+    fontSize: 16,
     fontWeight: 'bold',
+    color: Colors.light.text,
     textAlign: 'center',
   },
 });
