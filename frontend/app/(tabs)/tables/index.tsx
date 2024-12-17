@@ -4,10 +4,9 @@ import { Link } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import { MaterialIcons } from '@expo/vector-icons';
 
-// Define allowed paths and icons
 type Table = {
   name: string;
-  icon: keyof typeof MaterialIcons.glyphMap; // Ensures icon is from MaterialIcons
+  icon: keyof typeof MaterialIcons.glyphMap; 
   path: '/tables/products' | '/tables/news' | '/tables/customers' | '/tables/address' | '/tables/categories' | '/tables/invoices' | '/tables/suppliers' | '/tables/invoiceitems' | '/tables/reviews' | '/tables/productsuppliers';
 };
 
@@ -31,7 +30,7 @@ export default function TablesPage() {
       <FlatList
         data={tables}
         keyExtractor={(item) => item.name}
-        numColumns={2} // Two-column grid
+        numColumns={2} 
         columnWrapperStyle={styles.row}
         renderItem={({ item }) => (
           <Link href={item.path} asChild>
