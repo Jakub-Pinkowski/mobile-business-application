@@ -38,6 +38,9 @@ export default function TablesPage() {
         <Link href="/tables/reviews" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
           <Text style={styles.buttonText}>Reviews</Text>
         </Link>
+        <Link href="/tables/productsuppliers" style={[styles.button, { backgroundColor: Colors.light.primary }]}>
+          <Text style={styles.buttonText}>Product Suppliers</Text>
+        </Link>
       </View>
     </View>
   );
