@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { Colors } from '@/constants/Colors';
 
@@ -50,6 +50,7 @@ export default function Business_1() {
     const [customers, setCustomers] = useState<Customer[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
+    const [expandedReviewId, setExpandedReviewId] = useState<number | null>(null);
 
     useEffect(() => {
         fetchData();
@@ -95,6 +96,10 @@ export default function Business_1() {
         });
     };
 
+    const toggleExpand = (reviewId: number) => {
+        setExpandedReviewId(prevId => (prevId === reviewId ? null : reviewId));
+    };
+
     if (loading) {
         return (
             <View style={styles.loadingContainer}>
@@ -114,11 +119,18 @@ export default function Business_1() {
                 keyExtractor={(item) => item.reviewId.toString()}
                 renderItem={({ item }) => (
                     <View style={styles.card}>
-                        <Text style={styles.cardTitle}>{item.productName}</Text>
-                        <Text style={styles.cardSubtitle}>Category: {item.categoryName}</Text>
-                        <Text style={styles.cardSubtitle}>Reviewed by: {item.customerName}</Text>
-                        <Text style={styles.cardContent}>Review: {item.content}</Text>
-                        <Text style={styles.cardRating}>Rating: {item.rating}/5</Text>
+                        <TouchableOpacity onPress={() => toggleExpand(item.reviewId)}>
+                            <Text style={styles.cardTitle}>{item.productName}</Text>
+                        </TouchableOpacity>
+
+                        {expandedReviewId === item.reviewId && (
+                            <View style={styles.expandedContent}>
+                                <Text style={styles.cardSubtitle}>Category: {item.categoryName}</Text>
+                                <Text style={styles.cardSubtitle}>Reviewed by: {item.customerName}</Text>
+                                <Text style={styles.cardContent}>Review: {item.content}</Text>
+                                <Text style={styles.cardRating}>Rating: {item.rating}/5</Text>
+                            </View>
+                        )}
                     </View>
                 )}
             />
@@ -152,7 +164,9 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 4,
-        color: Colors.light.primary,
+    },
+    expandedContent: {
+        marginTop: 12,
     },
     cardSubtitle: {
         fontSize: 14,
