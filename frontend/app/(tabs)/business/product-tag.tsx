@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { Colors } from '@/constants/Colors';
 
@@ -35,6 +35,7 @@ export default function ProductTagSummary() {
     const [products, setProducts] = useState<Product[]>([]);
     const [tags, setTags] = useState<Tag[]>([]);
     const [productTags, setProductTags] = useState<ProductTag[]>([]);
+    const [expandedProductId, setExpandedProductId] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -70,6 +71,10 @@ export default function ProductTagSummary() {
         });
     };
 
+    const toggleExpand = (productId: number) => {
+        setExpandedProductId(prevId => (prevId === productId ? null : productId));
+    };
+
     const joinedData = getJoinedData();
 
     return (
@@ -77,19 +82,26 @@ export default function ProductTagSummary() {
             <Text style={styles.header}>Product Tag Summary</Text>
             {joinedData.map(product => (
                 <View key={product.id} style={styles.card}>
-                    <Text style={styles.cardHeader}>{product.name}</Text>
-                    <Text style={styles.cardPrice}>Price: ${product.price.toFixed(2)}</Text>
-                    <Text style={styles.cardDescription}>{product.description}</Text>
-                    <View style={styles.tagsContainer}>
-                        <Text style={styles.cardTagsHeader}>Tags:</Text>
-                        {product.tags.length > 0 ? (
-                            product.tags.map(tag => (
-                                <Text key={tag.id} style={styles.tag}>{tag.name}</Text>
-                            ))
-                        ) : (
-                            <Text style={styles.noTags}>No tags available</Text>
-                        )}
-                    </View>
+                    <TouchableOpacity onPress={() => toggleExpand(product.id)}>
+                        <Text style={styles.cardHeader}>{product.name}</Text>
+                    </TouchableOpacity>
+
+                    {expandedProductId === product.id && (
+                        <View style={styles.expandedContent}>
+                            <Text style={styles.cardPrice}>Price: ${product.price.toFixed(2)}</Text>
+                            <Text style={styles.cardDescription}>{product.description}</Text>
+                            <View style={styles.tagsContainer}>
+                                <Text style={styles.cardTagsHeader}>Tags:</Text>
+                                {product.tags.length > 0 ? (
+                                    product.tags.map(tag => (
+                                        <Text key={tag.id} style={styles.tag}>{tag.name}</Text>
+                                    ))
+                                ) : (
+                                    <Text style={styles.noTags}>No tags available</Text>
+                                )}
+                            </View>
+                        </View>
+                    )}
                 </View>
             ))}
         </ScrollView>
@@ -142,6 +154,9 @@ const styles = StyleSheet.create({
     tag: {
         fontSize: 14,
         color: '#333',
+    },
+    expandedContent: {
+        marginTop: 8,
     },
     noTags: {
         fontSize: 14,
