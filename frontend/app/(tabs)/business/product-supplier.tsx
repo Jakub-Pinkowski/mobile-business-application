@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     supplierEmail: {
         fontSize: 14,
         color: '#666',
-        marginBottom: 8,
+        marginBottom: 10,
     },
     noSuppliers: {
         fontSize: 14,
