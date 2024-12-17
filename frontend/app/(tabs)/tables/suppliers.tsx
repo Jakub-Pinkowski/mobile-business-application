@@ -12,7 +12,8 @@ interface Supplier {
 export default function SuppliersScreen() {
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
     const [expanded, setExpanded] = useState<string | null>(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+    const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [editSupplier, setEditSupplier] = useState<Supplier | null>(null);
     const [newSupplier, setNewSupplier] = useState<Supplier>({ name: '', contactEmail: '' });
 
@@ -37,7 +38,7 @@ export default function SuppliersScreen() {
     // Handle Edit Supplier
     const handleEditSupplier = (supplier: Supplier) => {
         setEditSupplier(supplier);
-        setIsModalVisible(true);
+        setIsEditModalVisible(true);
     };
 
     // Handle Update Supplier
@@ -50,7 +51,7 @@ export default function SuppliersScreen() {
                         sup.id === editSupplier.id ? response.data : sup
                     );
                     setSuppliers(updatedSuppliers);
-                    setIsModalVisible(false);
+                    setIsEditModalVisible(false);
                     setEditSupplier(null);
                     Alert.alert('Success', 'Supplier updated successfully');
                 } else {
@@ -74,7 +75,7 @@ export default function SuppliersScreen() {
             const response = await axios.post('http://localhost:5094/suppliers', newSupplier);
             setSuppliers(prev => [...prev, response.data]);
             setNewSupplier({ name: '', contactEmail: '' });
-            setIsModalVisible(false);
+            setIsAddModalVisible(false);
         } catch (error) {
             console.error('Error adding supplier:', error);
             Alert.alert('Error', 'Failed to add the supplier');
@@ -126,12 +127,11 @@ export default function SuppliersScreen() {
         }
     };
 
-
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Suppliers</Text>
 
-            <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
+            <TouchableOpacity style={styles.addButton} onPress={() => setIsAddModalVisible(true)}>
                 <Text style={styles.addButtonText}>Add New Supplier</Text>
             </TouchableOpacity>
 
@@ -145,7 +145,7 @@ export default function SuppliersScreen() {
 
                     {expanded === supplier.id?.toString() && (
                         <View style={styles.cardContent}>
-                            <Text style={styles.cardLabel}>Contact Number:</Text>
+                            <Text style={styles.cardLabel}>Contact Email:</Text>
                             <Text style={styles.cardValue}>{supplier.contactEmail}</Text>
                             <View style={styles.cardActions}>
                                 <TouchableOpacity
@@ -166,12 +166,11 @@ export default function SuppliersScreen() {
             ))}
 
             {/* Modal for editing a supplier */}
-            <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+            <Modal visible={isEditModalVisible} animationType="slide" transparent={true}>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContainer}>
                         <Text style={styles.modalTitle}>Edit Supplier</Text>
 
-                        {/* Name Field */}
                         <Text style={styles.label}>Name</Text>
                         <TextInput
                             style={styles.input}
@@ -179,7 +178,6 @@ export default function SuppliersScreen() {
                             onChangeText={text => setEditSupplier(prev => ({ ...prev!, name: text }))}
                         />
 
-                        {/* Contact Email Field */}
                         <Text style={styles.label}>Contact Email</Text>
                         <TextInput
                             style={styles.input}
@@ -195,7 +193,7 @@ export default function SuppliersScreen() {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.actionButton, styles.cancelButton]}
-                                onPress={() => setIsModalVisible(false)}>
+                                onPress={() => setIsEditModalVisible(false)}>
                                 <Text style={styles.actionButtonText}>Cancel</Text>
                             </TouchableOpacity>
                         </View>
@@ -204,12 +202,11 @@ export default function SuppliersScreen() {
             </Modal>
 
             {/* Modal for adding a new supplier */}
-            <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+            <Modal visible={isAddModalVisible} animationType="slide" transparent={true}>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContainer}>
                         <Text style={styles.modalTitle}>Add New Supplier</Text>
 
-                        {/* Name Field */}
                         <Text style={styles.label}>Name</Text>
                         <TextInput
                             style={styles.input}
@@ -217,7 +214,6 @@ export default function SuppliersScreen() {
                             onChangeText={text => setNewSupplier(prev => ({ ...prev, name: text }))}
                         />
 
-                        {/* Contact Email Field */}
                         <Text style={styles.label}>Contact Email</Text>
                         <TextInput
                             style={styles.input}
@@ -233,7 +229,7 @@ export default function SuppliersScreen() {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.actionButton, styles.cancelButton]}
-                                onPress={() => setIsModalVisible(false)}>
+                                onPress={() => setIsAddModalVisible(false)}>
                                 <Text style={styles.actionButtonText}>Cancel</Text>
                             </TouchableOpacity>
                         </View>
@@ -243,7 +239,6 @@ export default function SuppliersScreen() {
         </View>
     );
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
