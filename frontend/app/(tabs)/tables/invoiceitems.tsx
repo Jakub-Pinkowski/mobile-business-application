@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert, ScrollView } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    Modal,
+    TextInput,
+    Alert,
+    ScrollView,
+} from 'react-native';
 import { Colors } from '@/constants/Colors';
 import axios from 'axios';
 
@@ -15,15 +24,12 @@ export default function InvoiceItemScreen() {
     const [invoiceItems, setInvoiceItems] = useState<InvoiceItem[]>([]);
     const [expanded, setExpanded] = useState<string | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [editInvoiceItem, setEditInvoiceItem] = useState<InvoiceItem | null>(null);
-    const [newInvoiceItem, setNewInvoiceItem] = useState<InvoiceItem>({
-        quantity: 0,
-        price: 0.0,
-        productId: 0,
-        invoiceId: 0,
-    });
+    const [activeInvoiceItem, setActiveInvoiceItem] = useState<InvoiceItem | null>(null);
 
-    // Fetch invoice items from backend
+    useEffect(() => {
+        fetchInvoiceItems();
+    }, []);
+
     const fetchInvoiceItems = async () => {
         try {
             const response = await axios.get('http://localhost:5094/invoiceitems');
@@ -33,58 +39,48 @@ export default function InvoiceItemScreen() {
         }
     };
 
-    useEffect(() => {
-        fetchInvoiceItems();
-    }, []);
-
     const handlePress = (itemId: string) => {
         setExpanded(prev => (prev === itemId ? null : itemId));
     };
 
-    // Handle Edit InvoiceItem
-    const handleEditInvoiceItem = (item: InvoiceItem) => {
-        setEditInvoiceItem(item);
+    const openModal = (item?: InvoiceItem) => {
+        setActiveInvoiceItem(item || { quantity: 0, price: 0.0, productId: 0, invoiceId: 0 });
         setIsModalVisible(true);
     };
 
-    // Handle Update InvoiceItem
-    const handleUpdateInvoiceItem = async () => {
-        if (editInvoiceItem) {
-            try {
-                const response = await axios.put(`http://localhost:5094/invoiceitems/${editInvoiceItem.id}`, editInvoiceItem);
-                if (response.status === 200) {
-                    const updatedItems = invoiceItems.map(item =>
-                        item.id === editInvoiceItem.id ? response.data : item
-                    );
-                    setInvoiceItems(updatedItems);
-                    setIsModalVisible(false);
-                    setEditInvoiceItem(null);
-                    Alert.alert('Success', 'Invoice item updated successfully');
-                } else {
-                    Alert.alert('Error', 'Failed to update the invoice item');
-                }
-            } catch (error) {
-                console.error('Error updating invoice item:', error);
-                Alert.alert('Error', 'Failed to update the invoice item');
-            }
-        }
+    const closeModal = () => {
+        setIsModalVisible(false);
+        setActiveInvoiceItem(null);
     };
 
-    // Handle Add InvoiceItem
-    const handleAddInvoiceItem = async () => {
-        if (newInvoiceItem.quantity <= 0 || newInvoiceItem.price <= 0) {
-            Alert.alert('Invalid Input', 'Please enter valid quantity and price.');
+    const handleSaveInvoiceItem = async () => {
+        if (!activeInvoiceItem) return;
+
+        const { quantity, price, productId, invoiceId, id } = activeInvoiceItem;
+
+        if (quantity <= 0 || price <= 0) {
+            Alert.alert('Invalid Input', 'Quantity and price must be greater than zero.');
             return;
         }
 
         try {
-            const response = await axios.post('http://localhost:5094/invoiceitems', newInvoiceItem);
-            setInvoiceItems(prev => [...prev, response.data]);
-            setNewInvoiceItem({ quantity: 0, price: 0.0, productId: 0, invoiceId: 0 });
-            setIsModalVisible(false);
+            if (id) {
+                // Update existing invoice item
+                const response = await axios.put(`http://localhost:5094/invoiceitems/${id}`, activeInvoiceItem);
+                setInvoiceItems(prev =>
+                    prev.map(item => (item.id === id ? response.data : item))
+                );
+                Alert.alert('Success', 'Invoice item updated successfully');
+            } else {
+                // Add new invoice item
+                const response = await axios.post('http://localhost:5094/invoiceitems', activeInvoiceItem);
+                setInvoiceItems(prev => [...prev, response.data]);
+                Alert.alert('Success', 'Invoice item added successfully');
+            }
+            closeModal();
         } catch (error) {
-            console.error('Error adding invoice item:', error);
-            Alert.alert('Error', 'Failed to add the invoice item');
+            console.error('Error saving invoice item:', error);
+            Alert.alert('Error', `Failed to ${id ? 'update' : 'add'} the invoice item.`);
         }
     };
 
@@ -124,12 +120,11 @@ export default function InvoiceItemScreen() {
         }
     };
 
-
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Invoice Items</Text>
 
-            <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
+            <TouchableOpacity style={styles.addButton} onPress={() => openModal()}>
                 <Text style={styles.addButtonText}>Add New Invoice Item</Text>
             </TouchableOpacity>
 
@@ -152,7 +147,7 @@ export default function InvoiceItemScreen() {
                                 <View style={styles.cardActions}>
                                     <TouchableOpacity
                                         style={styles.button}
-                                        onPress={() => handleEditInvoiceItem(item)}>
+                                        onPress={() => openModal(item)}>
                                         <Text style={styles.buttonText}>Edit</Text>
                                     </TouchableOpacity>
 
@@ -168,82 +163,48 @@ export default function InvoiceItemScreen() {
                 ))}
             </ScrollView>
 
-            {/* Modal for adding/editing Invoice Items */}
-            <Modal visible={isModalVisible} animationType="slide" transparent={true}>
-                <View style={styles.modalOverlay}>
-                    <View style={styles.modalContainer}>
-                        <Text style={styles.modalTitle}>
-                            {editInvoiceItem ? 'Edit Invoice Item' : 'Add New Invoice Item'}
-                        </Text>
+            {isModalVisible && (
+                <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+                    <View style={styles.modalOverlay}>
+                        <View style={styles.modalContainer}>
+                            <Text style={styles.modalTitle}>
+                                {activeInvoiceItem?.id ? 'Edit Invoice Item' : 'Add New Invoice Item'}
+                            </Text>
 
-                        <Text style={styles.label}>Quantity</Text>
-                        <TextInput
-                            style={styles.input}
-                            keyboardType="numeric"
-                            value={(editInvoiceItem?.quantity || newInvoiceItem.quantity).toString()}
-                            onChangeText={text =>
-                                editInvoiceItem
-                                    ? setEditInvoiceItem(prev => ({ ...prev!, quantity: parseInt(text) || 0 }))
-                                    : setNewInvoiceItem(prev => ({ ...prev, quantity: parseInt(text) || 0 }))
-                            }
-                        />
+                            {['quantity', 'price', 'productId', 'invoiceId'].map(field => (
+                                <View key={field}>
+                                    <Text style={styles.label}>{field.replace(/([A-Z])/g, ' $1')}</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        keyboardType="numeric"
+                                        value={(activeInvoiceItem as any)[field]?.toString() || ''}
+                                        onChangeText={text =>
+                                            setActiveInvoiceItem(prev =>
+                                                prev ? { ...prev, [field]: parseFloat(text) || 0 } : prev
+                                            )
+                                        }
+                                    />
+                                </View>
+                            ))}
 
-                        <Text style={styles.label}>Price</Text>
-                        <TextInput
-                            style={styles.input}
-                            keyboardType="numeric"
-                            value={(editInvoiceItem?.price || newInvoiceItem.price).toString()}
-                            onChangeText={text =>
-                                editInvoiceItem
-                                    ? setEditInvoiceItem(prev => ({ ...prev!, price: parseFloat(text) || 0 }))
-                                    : setNewInvoiceItem(prev => ({ ...prev, price: parseFloat(text) || 0 }))
-                            }
-                        />
-
-                        <Text style={styles.label}>Product ID</Text>
-                        <TextInput
-                            style={styles.input}
-                            keyboardType="numeric"
-                            value={(editInvoiceItem?.productId || newInvoiceItem.productId).toString()}
-                            onChangeText={text =>
-                                editInvoiceItem
-                                    ? setEditInvoiceItem(prev => ({ ...prev!, productId: parseInt(text) || 0 }))
-                                    : setNewInvoiceItem(prev => ({ ...prev, productId: parseInt(text) || 0 }))
-                            }
-                        />
-
-                        <Text style={styles.label}>Invoice ID</Text>
-                        <TextInput
-                            style={styles.input}
-                            keyboardType="numeric"
-                            value={(editInvoiceItem?.invoiceId || newInvoiceItem.invoiceId).toString()}
-                            onChangeText={text =>
-                                editInvoiceItem
-                                    ? setEditInvoiceItem(prev => ({ ...prev!, invoiceId: parseInt(text) || 0 }))
-                                    : setNewInvoiceItem(prev => ({ ...prev, invoiceId: parseInt(text) || 0 }))
-                            }
-                        />
-
-                        <View style={styles.modalActions}>
-                            <TouchableOpacity
-                                style={[styles.actionButton, styles.updateButton]}
-                                onPress={editInvoiceItem ? handleUpdateInvoiceItem : handleAddInvoiceItem}>
-                                <Text style={styles.actionButtonText}>
-                                    {editInvoiceItem ? 'Update' : 'Add'}
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[styles.actionButton, styles.cancelButton]}
-                                onPress={() => {
-                                    setIsModalVisible(false);
-                                    setEditInvoiceItem(null);
-                                }}>
-                                <Text style={styles.actionButtonText}>Cancel</Text>
-                            </TouchableOpacity>
+                            <View style={styles.modalActions}>
+                                <TouchableOpacity
+                                    style={[styles.actionButton, styles.updateButton]}
+                                    onPress={handleSaveInvoiceItem}>
+                                    <Text style={styles.actionButtonText}>
+                                        {activeInvoiceItem?.id ? 'Update' : 'Add'}
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[styles.actionButton, styles.cancelButton]}
+                                    onPress={closeModal}>
+                                    <Text style={styles.actionButtonText}>Cancel</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
+            )}
         </View>
     );
 }
