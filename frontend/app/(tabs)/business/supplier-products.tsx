@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { Colors } from '@/constants/Colors';
 
@@ -33,6 +33,7 @@ export default function SupplierProductInventory() {
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
     const [products, setProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
+    const [expandedSupplierId, setExpandedSupplierId] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -69,6 +70,10 @@ export default function SupplierProductInventory() {
         });
     };
 
+    const toggleExpand = (supplierId: number) => {
+        setExpandedSupplierId(prevId => (prevId === supplierId ? null : supplierId));
+    };
+
     const joinedData = getJoinedData();
 
     return (
@@ -76,20 +81,27 @@ export default function SupplierProductInventory() {
             <Text style={styles.header}>Supplier Product Inventory</Text>
             {joinedData.map(({ supplier, products }) => (
                 <View key={supplier.id} style={styles.card}>
-                    <Text style={styles.cardHeader}>{supplier.name}</Text>
-                    <Text style={styles.cardEmail}>Contact Email: {supplier.contactEmail}</Text>
-                    <View style={styles.productsContainer}>
-                        <Text style={styles.productsHeader}>Products:</Text>
-                        {products.map(product => (
-                            <View key={product.id} style={styles.productRow}>
-                                <Text style={styles.productName}>{product.name}</Text>
-                                <Text style={styles.productCategory}>
-                                    Category: {product.category?.name || 'Uncategorized'}
-                                </Text>
-                                <Text style={styles.productPrice}>Price: ${product.price.toFixed(2)}</Text>
+                    <TouchableOpacity onPress={() => toggleExpand(supplier.id)}>
+                        <Text style={styles.cardHeader}>{supplier.name}</Text>
+                    </TouchableOpacity>
+
+                    {expandedSupplierId === supplier.id && (
+                        <View style={styles.expandedContent}>
+                            <Text style={styles.cardEmail}>Contact Email: {supplier.contactEmail}</Text>
+                            <View style={styles.productsContainer}>
+                                <Text style={styles.productsHeader}>Products:</Text>
+                                {products.map(product => (
+                                    <View key={product.id} style={styles.productRow}>
+                                        <Text style={styles.productName}>{product.name}</Text>
+                                        <Text style={styles.productCategory}>
+                                            Category: {product.category?.name || 'Uncategorized'}
+                                        </Text>
+                                        <Text style={styles.productPrice}>Price: ${product.price.toFixed(2)}</Text>
+                                    </View>
+                                ))}
                             </View>
-                        ))}
-                    </View>
+                        </View>
+                    )}
                 </View>
             ))}
         </ScrollView>
@@ -141,6 +153,9 @@ const styles = StyleSheet.create({
     productName: {
         fontSize: 14,
         fontWeight: 'bold',
+    },
+    expandedContent: {
+        marginTop: 8,
     },
     productCategory: {
         fontSize: 14,
