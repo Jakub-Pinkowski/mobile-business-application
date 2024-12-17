@@ -11,7 +11,8 @@ interface Category {
 export default function CategoriesScreen() {
     const [categories, setCategories] = useState<Category[]>([]);
     const [expanded, setExpanded] = useState<string | null>(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+    const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [editCategory, setEditCategory] = useState<Category | null>(null);
     const [newCategory, setNewCategory] = useState<Category>({ name: '' });
 
@@ -36,7 +37,7 @@ export default function CategoriesScreen() {
     // Handle Edit Category
     const handleEditCategory = (category: Category) => {
         setEditCategory(category);
-        setIsModalVisible(true);
+        setIsEditModalVisible(true);
     };
 
     // Handle Update Category
@@ -49,7 +50,7 @@ export default function CategoriesScreen() {
                         cat.id === editCategory.id ? response.data : cat
                     );
                     setCategories(updatedCategories);
-                    setIsModalVisible(false);
+                    setIsEditModalVisible(false);
                     setEditCategory(null);
                     Alert.alert('Success', 'Category updated successfully');
                 } else {
@@ -73,7 +74,7 @@ export default function CategoriesScreen() {
             const response = await axios.post('http://localhost:5094/categories', newCategory);
             setCategories(prev => [...prev, response.data]);
             setNewCategory({ name: '' });
-            setIsModalVisible(false);
+            setIsAddModalVisible(false);
         } catch (error) {
             console.error('Error adding category:', error);
             Alert.alert('Error', 'Failed to add the category');
@@ -82,7 +83,9 @@ export default function CategoriesScreen() {
 
     // Handle Delete Category
     const handleDeleteCategory = (categoryId: number) => {
+        // Check if the app is running on web, and use window.confirm on the web.
         if (typeof window !== 'undefined') {
+            // Web environment
             const confirmation = window.confirm('Are you sure you want to delete this category?');
             if (confirmation) {
                 deleteCategoryFromBackend(categoryId);
@@ -90,7 +93,8 @@ export default function CategoriesScreen() {
                 console.log('Delete cancelled');
             }
         } else {
-            Alert.alert('Delete Category', 'Are you sure you want to delete this category?', [
+            // For mobile platforms (iOS/Android), use the React Native Alert
+            Alert.alert('Delete Customer', 'Are you sure you want to delete this category?', [
                 {
                     text: 'Cancel',
                 },
@@ -109,7 +113,6 @@ export default function CategoriesScreen() {
     const deleteCategoryFromBackend = async (categoryId: number) => {
         try {
             setCategories(prevCategories => prevCategories.filter(category => category.id !== categoryId));
-
             const response = await axios.delete(`http://localhost:5094/categories/${categoryId}`);
             if (response.status === 200) {
                 fetchCategories();
@@ -125,12 +128,11 @@ export default function CategoriesScreen() {
         }
     };
 
-
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Categories</Text>
 
-            <TouchableOpacity style={styles.addButton} onPress={() => setIsModalVisible(true)}>
+            <TouchableOpacity style={styles.addButton} onPress={() => setIsAddModalVisible(true)}>
                 <Text style={styles.addButtonText}>Add New Category</Text>
             </TouchableOpacity>
 
@@ -163,12 +165,11 @@ export default function CategoriesScreen() {
             ))}
 
             {/* Modal for editing a category */}
-            <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+            <Modal visible={isEditModalVisible} animationType="slide" transparent={true}>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContainer}>
                         <Text style={styles.modalTitle}>Edit Category</Text>
 
-                        {/* Name Field */}
                         <Text style={styles.label}>Name</Text>
                         <TextInput
                             style={styles.input}
@@ -184,7 +185,7 @@ export default function CategoriesScreen() {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.actionButton, styles.cancelButton]}
-                                onPress={() => setIsModalVisible(false)}>
+                                onPress={() => setIsEditModalVisible(false)}>
                                 <Text style={styles.actionButtonText}>Cancel</Text>
                             </TouchableOpacity>
                         </View>
@@ -193,12 +194,11 @@ export default function CategoriesScreen() {
             </Modal>
 
             {/* Modal for adding a new category */}
-            <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+            <Modal visible={isAddModalVisible} animationType="slide" transparent={true}>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContainer}>
                         <Text style={styles.modalTitle}>Add New Category</Text>
 
-                        {/* Name Field */}
                         <Text style={styles.label}>Name</Text>
                         <TextInput
                             style={styles.input}
@@ -214,7 +214,7 @@ export default function CategoriesScreen() {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.actionButton, styles.cancelButton]}
-                                onPress={() => setIsModalVisible(false)}>
+                                onPress={() => setIsAddModalVisible(false)}>
                                 <Text style={styles.actionButtonText}>Cancel</Text>
                             </TouchableOpacity>
                         </View>
