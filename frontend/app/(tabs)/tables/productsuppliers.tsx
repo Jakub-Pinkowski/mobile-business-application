@@ -93,25 +93,41 @@ export default function ProductsSupplierScreen() {
 
     // Handle Delete ProductSupplier
     const handleDeleteProductSupplier = (productSupplierId: number) => {
-        Alert.alert('Delete Product-Supplier', 'Are you sure you want to delete this product-supplier?', [
-            {
-                text: 'Cancel',
-            },
-            {
-                text: 'Delete',
-                onPress: () => deleteProductSupplierFromBackend(productSupplierId),
-                style: 'destructive',
-            },
-        ]);
+        // Check if the app is running on web, and use window.confirm on the web.
+        if (typeof window !== 'undefined') {
+            // Web environment
+            const confirmation = window.confirm('Are you sure you want to delete this product-supplier?');
+            if (confirmation) {
+                deleteProductSupplierFromBackend(productSupplierId);
+            } else {
+                console.log('Delete cancelled');
+            }
+        } else {
+            // For mobile platforms (iOS/Android), use the React Native Alert
+            Alert.alert('Delete Product-Supplier', 'Are you sure you want to delete this product-supplier?', [
+                {
+                    text: 'Cancel',
+                },
+                {
+                    text: 'Delete',
+                    onPress: () => deleteProductSupplierFromBackend(productSupplierId),
+                    style: 'destructive',
+                },
+            ]);
+        }
     };
 
+    // Function to delete product-supplier from the backend and update UI
     const deleteProductSupplierFromBackend = async (productSupplierId: number) => {
         try {
+            // Optimistic UI update: Remove the product-supplier immediately from the local state
             setProductSuppliersData((prev) =>
                 prev.filter((productSupplier) => productSupplier.id !== productSupplierId)
             );
+
             const response = await axios.delete(`http://localhost:5094/productsupplier/${productSupplierId}`);
             if (response.status === 200) {
+                fetchProductSuppliers();
                 Alert.alert('Success', 'Product-Supplier deleted successfully');
             } else {
                 fetchProductSuppliers();
@@ -123,6 +139,7 @@ export default function ProductsSupplierScreen() {
             Alert.alert('Error', 'Failed to delete the product-supplier');
         }
     };
+
 
     return (
         <View style={styles.container}>
