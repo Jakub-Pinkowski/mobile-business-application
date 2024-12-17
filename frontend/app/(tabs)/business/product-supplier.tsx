@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { Colors } from '@/constants/Colors';
 
@@ -34,6 +34,7 @@ export default function ProductSupplierSummary() {
     const [products, setProducts] = useState<Product[]>([]);
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
     const [productSuppliers, setProductSuppliers] = useState<ProductSupplier[]>([]);
+    const [expandedProductId, setExpandedProductId] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -56,7 +57,6 @@ export default function ProductSupplierSummary() {
 
     const getJoinedData = (): JoinedProduct[] => {
         return products.map(product => {
-            // Find the suppliers associated with each product using productSuppliers
             const associatedSuppliers = productSuppliers
                 .filter(ps => ps.productId === product.id)
                 .map(ps => suppliers.find(supplier => supplier.id === ps.supplierId))
@@ -71,27 +71,38 @@ export default function ProductSupplierSummary() {
 
     const joinedData = getJoinedData();
 
+    const toggleExpand = (productId: number) => {
+        setExpandedProductId(prev => (prev === productId ? null : productId));
+    };
+
     return (
         <ScrollView style={styles.container}>
             <Text style={styles.header}>Product Supplier Summary</Text>
             {joinedData.map(product => (
                 <View key={product.id} style={styles.card}>
-                    <Text style={styles.cardHeader}>{product.name}</Text>
-                    <Text style={styles.cardPrice}>Price: ${product.price.toFixed(2)}</Text>
-                    <Text style={styles.cardDescription}>{product.description}</Text>
-                    <View style={styles.suppliersContainer}>
-                        <Text style={styles.cardSuppliersHeader}>Suppliers:</Text>
-                        {product.suppliers.length > 0 ? (
-                            product.suppliers.map(supplier => (
-                                <View key={supplier.id}>
-                                    <Text style={styles.supplierName}>{supplier.name}</Text>
-                                    <Text style={styles.supplierEmail}>{supplier.contactEmail}</Text>
-                                </View>
-                            ))
-                        ) : (
-                            <Text style={styles.noSuppliers}>No suppliers available</Text>
-                        )}
-                    </View>
+                    <TouchableOpacity onPress={() => toggleExpand(product.id)} style={styles.cardHeader}>
+                        <Text style={styles.cardTitle}>{product.name}</Text>
+                    </TouchableOpacity>
+
+                    {expandedProductId === product.id && (
+                        <View style={styles.cardContent}>
+                            <Text style={styles.cardPrice}>Price: ${product.price.toFixed(2)}</Text>
+                            <Text style={styles.cardDescription}>{product.description}</Text>
+                            <View style={styles.suppliersContainer}>
+                                <Text style={styles.cardSuppliersHeader}>Suppliers:</Text>
+                                {product.suppliers.length > 0 ? (
+                                    product.suppliers.map(supplier => (
+                                        <View key={supplier.id}>
+                                            <Text style={styles.supplierName}>{supplier.name}</Text>
+                                            <Text style={styles.supplierEmail}>{supplier.contactEmail}</Text>
+                                        </View>
+                                    ))
+                                ) : (
+                                    <Text style={styles.noSuppliers}>No suppliers available</Text>
+                                )}
+                            </View>
+                        </View>
+                    )}
                 </View>
             ))}
         </ScrollView>
@@ -120,9 +131,16 @@ const styles = StyleSheet.create({
         elevation: 4,
     },
     cardHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    cardTitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        marginBottom: 8,
+    },
+    cardContent: {
+        marginTop: 12,
     },
     cardPrice: {
         fontSize: 16,
