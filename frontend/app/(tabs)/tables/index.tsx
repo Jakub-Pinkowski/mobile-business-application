@@ -7,7 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 type Table = {
   name: string;
   icon: keyof typeof MaterialIcons.glyphMap;
-  path: '/tables/products' | '/tables/news' | '/tables/customers' | '/tables/address' | '/tables/categories' | '/tables/invoices' | '/tables/suppliers' | '/tables/invoiceitems' | '/tables/reviews' | '/tables/productsuppliers';
+  path: '/tables/products' | '/tables/news' | '/tables/customers' | '/tables/address' | '/tables/categories' | '/tables/invoices' | '/tables/suppliers' | '/tables/invoiceitems' | '/tables/reviews' | '/tables/productsuppliers' | '/tables/tags' | '/tables/producttags';
 };
 
 const tables: Table[] = [
@@ -21,6 +21,8 @@ const tables: Table[] = [
   { name: 'Invoice Items', icon: 'inventory', path: '/tables/invoiceitems' },
   { name: 'Reviews', icon: 'rate-review', path: '/tables/reviews' },
   { name: 'Product Suppliers', icon: 'local-shipping', path: '/tables/productsuppliers' },
+  { name: 'Tags', icon: 'tag', path: '/tables/tags' },
+  { name: 'Product Tags', icon: 'bookmark', path: '/tables/producttags' },  
 ];
 
 export default function TablesPage() {
