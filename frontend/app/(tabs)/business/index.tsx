@@ -7,7 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 type BusinessView = {
   name: string;
   icon: keyof typeof MaterialIcons.glyphMap;
-  path: '/business/product-reviews' | '/business/customer-invoices' | '/business/supplier-products' | '/business/product-tag' | '/business/product-supplier';
+  path: '/business/product-reviews' | '/business/customer-invoices' | '/business/supplier-products' | '/business/product-tag' | '/business/product-supplier' | '/business/google-map';
   meta: string;
 };
 
@@ -17,6 +17,7 @@ const businessViews: BusinessView[] = [
   { name: 'Supplier Products', icon: 'business', path: '/business/supplier-products', meta: '3 tables used, foreign keys present' },
   { name: 'Product Tags', icon: 'label', path: '/business/product-tag', meta: 'many-to-many relationships between products and tags, 3 tables used' },
   { name: 'Product Suppliers', icon: 'local-shipping', path: '/business/product-supplier', meta: 'many-to-many relationships between products and suppliers, 3 tables used' },
+  { name: 'Google Map', icon: 'map', path: '/business/google-map', meta: 'Interactive map view integrated with business data' },
 ];
 
 export default function BusinessPage() {
