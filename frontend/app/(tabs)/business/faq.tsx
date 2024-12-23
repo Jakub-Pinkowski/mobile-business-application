@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Animated } from 'react-native';
-import { Colors } from '@/constants/Colors'; // Assuming your color constants are imported here
+import { Colors } from '@/constants/Colors'; 
 import { MaterialIcons } from '@expo/vector-icons';
 
 type FaqItem = {
